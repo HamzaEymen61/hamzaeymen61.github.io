@@ -8,10 +8,9 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="apple-mobile-web-app-title" content="Akıllı Ev" />
   <title>Akıllı Ev</title>
-  <link rel="manifest" href="manifest.json" />
-  <link rel="apple-touch-icon" href="icon-192.png" />
-  <style>
+    <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
     :root {
       --bg-gradient: radial-gradient(circle at 50% 0%, #1a1a24 0%, #0a0a0c 70%);
       --card-bg: rgba(255, 255, 255, 0.03);
@@ -19,9 +18,10 @@
       --card-border-active: rgba(255, 255, 255, 0.25);
       --text: #ffffff;
       --text-muted: #71717a;
-      --glow-color: rgba(255, 255, 255, 0.15);
+      --glow-color: rgba(255, 255, 255, 0.15); 
       --on-text: #ffffff;
     }
+
     body {
       background: var(--bg-gradient);
       color: var(--text);
@@ -33,69 +33,228 @@
       overflow: hidden;
       padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
+
     .app {
-      width: 100%; max-width: 420px; height: 100%;
+      width: 100%;
+      max-width: 420px;
+      height: 100%;
       padding: 30px 24px;
-      display: flex; flex-direction: column; justify-content: space-between;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
-    header {
-      display: flex; flex-direction: column; align-items: center; text-align: center;
-      margin-top: 15px; margin-bottom: 5px; min-height: 85px;
+
+    header { 
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-top: 15px;
+      margin-bottom: 5px;
+      min-height: 85px;
     }
-    .live-time { font-size: 46px; font-weight: 200; letter-spacing: -1.2px; color: #fff; line-height: 0.95; }
-    .greeting-text { font-size: 13px; font-weight: 500; color: #fff; margin-top: 6px; opacity: 0.85; min-height: 16px; }
-    .live-date { font-size: 11px; font-weight: 400; color: var(--text-muted); margin-top: 4px; text-transform: capitalize; min-height: 14px; }
-    .section-label { font-size: 10px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--text-muted); margin-bottom: 14px; margin-top: 10px; opacity: 0.7; }
-    .main-content { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; }
-    .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+
+    .live-time {
+      font-size: 46px;
+      font-weight: 200;
+      letter-spacing: -1.2px;
+      color: #ffffff;
+      line-height: 0.95;
+    }
+
+    .greeting-text {
+      font-size: 13px;
+      font-weight: 500;
+      color: #ffffff;
+      margin-top: 6px;
+      letter-spacing: -0.1px;
+      opacity: 0.85;
+      min-height: 16px;
+    }
+
+    .live-date {
+      font-size: 11px;
+      font-weight: 400;
+      color: var(--text-muted);
+      margin-top: 4px;
+      letter-spacing: 0.01em;
+      text-transform: capitalize;
+      min-height: 14px;
+    }
+
+    .section-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 14px;
+      margin-top: 10px;
+      opacity: 0.7;
+    }
+
+    .main-content {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+
     .led-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 22px; padding: 16px; cursor: pointer;
-      backdrop-filter: blur(25px); -webkit-backdrop-filter: blur(25px);
+      border-radius: 22px;
+      padding: 16px;
+      cursor: pointer;
+      backdrop-filter: blur(25px);
+      -webkit-backdrop-filter: blur(25px);
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      user-select: none; -webkit-tap-highlight-color: transparent;
-      display: flex; flex-direction: column; justify-content: space-between; align-items: flex-start;
-      height: 118px; box-shadow: 0 4px 24px rgba(0,0,0,0.15);
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-start;
+      height: 118px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+      position: relative;
     }
+
     .led-card:active { transform: scale(0.95); }
+
+    /* Açık kart: hem online hem on */
     .led-card.on {
-      background: rgba(255,255,255,0.06);
+      background: rgba(255, 255, 255, 0.06);
       border-color: var(--card-border-active);
-      box-shadow: 0 12px 28px rgba(0,0,0,0.35), 0 0 20px var(--glow-color);
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35), 0 0 20px var(--glow-color);
     }
+
+    /* Offline ama son durum "açık" — soluk parlak */
+    .led-card.on.offline {
+      opacity: 0.55;
+      border-color: rgba(255,255,255,0.12);
+      box-shadow: none;
+    }
+
+    /* Offline ve kapalı */
+    .led-card.offline { opacity: 0.25; }
+
     .led-card.loading { opacity: 0.4; pointer-events: none; }
-    .led-card-top { width: 100%; display: flex; justify-content: space-between; align-items: flex-start; }
-    .led-icon { font-size: 24px; transition: transform 0.3s ease; }
+
+    .offline-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 10px;
+      opacity: 0.6;
+      display: none;
+    }
+    .led-card.offline .offline-badge { display: block; }
+
+    .led-card-top {
+      width: 100%;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    .led-icon {
+      font-size: 24px;
+      transition: transform 0.3s ease;
+    }
+    
     .led-card.on .led-icon { transform: scale(1.06); }
+
     .led-status-dot {
-      width: 6px; height: 6px; border-radius: 50%;
-      background: rgba(255,255,255,0.1); margin-top: 6px; transition: all 0.3s ease;
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.1);
+      margin-top: 6px;
+      transition: all 0.3s ease;
     }
-    .led-card.on .led-status-dot { background: #fff; box-shadow: 0 0 8px #fff; }
-    .led-card-bottom { display: flex; flex-direction: column; align-items: flex-start; }
-    .led-name { font-size: 14px; font-weight: 600; color: var(--text-muted); transition: color 0.3s ease; }
+
+    .led-card.on:not(.offline) .led-status-dot {
+      background: #ffffff;
+      box-shadow: 0 0 8px #ffffff;
+    }
+
+    .led-card-bottom {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .led-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: -0.1px;
+      transition: color 0.3s ease;
+    }
+    
     .led-card.on .led-name { color: var(--on-text); }
-    .led-status-text { font-size: 11px; font-weight: 500; color: var(--text-muted); margin-top: 3px; }
-    .led-card.on .led-status-text { color: #fff; opacity: 0.85; }
-    .all-controls { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 8px; margin-bottom: 8px; }
-    .all-btn {
-      background: rgba(255,255,255,0.02); border: 1px solid var(--card-border);
-      border-radius: 18px; color: var(--text); font-size: 12px; font-weight: 500;
-      padding: 15px; cursor: pointer; backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px);
-      transition: all 0.3s; -webkit-tap-highlight-color: transparent;
+
+    .led-status-text {
+      font-size: 11px;
+      font-weight: 500;
+      color: var(--text-muted);
+      margin-top: 3px;
     }
+
+    .led-card.on .led-status-text { color: #ffffff; opacity: 0.85; }
+
+    .all-controls {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 8px;
+      margin-bottom: 8px;
+    }
+
+    .all-btn {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--card-border);
+      border-radius: 18px;
+      color: var(--text);
+      font-size: 12px;
+      font-weight: 500;
+      padding: 15px;
+      cursor: pointer;
+      backdrop-filter: blur(15px);
+      -webkit-backdrop-filter: blur(15px);
+      transition: all 0.3s;
+      -webkit-tap-highlight-color: transparent;
+      letter-spacing: -0.1px;
+    }
+
     .all-btn:active { transform: scale(0.96); }
+
     .toast {
-      position: fixed; bottom: 35px; left: 50%;
+      position: fixed;
+      bottom: 35px;
+      left: 50%;
       transform: translateX(-50%) translateY(80px);
-      background: rgba(20,20,25,0.95); border: 1px solid var(--card-border);
-      backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
-      border-radius: 99px; color: var(--text); font-size: 12px;
+      background: rgba(20, 20, 25, 0.95);
+      border: 1px solid var(--card-border);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 99px;
+      color: var(--text);
+      font-size: 12px;
       padding: 11px 24px;
       transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1), opacity 0.3s;
-      opacity: 0; z-index: 99; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      opacity: 0;
+      z-index: 99;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
+
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .toast.success { color: #ffffff; }
     .toast.error { border-color: rgba(248,113,113,0.3); color: #f87171; }
@@ -108,10 +267,12 @@
     <div class="greeting-text" id="greetingText"></div>
     <div class="live-date" id="liveDate"></div>
   </header>
+
   <div class="main-content">
     <p class="section-label">Odalar</p>
     <div class="grid" id="ledGrid"></div>
   </div>
+
   <div>
     <p class="section-label">Merkezi Senaryolar</p>
     <div class="all-controls">
@@ -120,52 +281,78 @@
     </div>
   </div>
 </div>
+
 <div class="toast" id="toast"></div>
 
 <script>
+const icon = document.createElement('link');
+  icon.rel = 'apple-touch-icon';
+  icon.href = 'https://github.com/HamzaEymen61/foto/raw/main/icon-192.png'; // Linki kısaltalım
+  document.head.appendChild(icon);
   const LEDS = [
-    { id: 'led1', name: 'Hamza Oda',   host: '192.168.1.51',      icon: '🛏️' },
-    { id: 'led2', name: 'Salon',        host: 'salon.local',        icon: '🛋️' },
-    { id: 'led3', name: 'Mutfak',       host: 'mutfak.local',       icon: '🍽️' },
-    { id: 'led4', name: 'Ravza Oda',   host: 'ravza-oda.local',    icon: '🌸' },
-    { id: 'led5', name: 'Yatak Odası', host: 'yatak-odasi.local',  icon: '🌙' },
+    { id: 'led1', name: 'Hamza Oda',    host: 'hamza-oda.local',     icon: '🛏️' },
+    { id: 'led2', name: 'Salon',         host: 'salon.local',          icon: '🛋️' },
+    { id: 'led3', name: 'Mutfak',        host: 'mutfak.local',         icon: '🍽️' },
+    { id: 'led4', name: 'Ravza Oda',    host: 'ravza-oda.local',      icon: '🌸' },
+    { id: 'led5', name: 'Yatak Odası',  host: 'yatak-odasi.local',    icon: '🌙' },
   ];
 
-  const TIMEOUT_MS = 4000;
+  const FETCH_TIMEOUT_MS = 3000; // iOS için biraz daha uzun timeout
 
-  // State sadece localStorage'dan — status sorgusu yok
   const state = {};
-  try {
-    const saved = JSON.parse(localStorage.getItem('smarthome_state')) || {};
-    LEDS.forEach(l => { state[l.id] = saved[l.id] === true; });
-  } catch(e) {
-    LEDS.forEach(l => { state[l.id] = false; });
+  const networkStatus = {};
+
+  // localStorage'dan son bilinen durumu yükle
+  function loadStoredState() {
+    try {
+      return JSON.parse(localStorage.getItem('smarthome_state')) || {};
+    } catch (e) {
+      return {};
+    }
   }
 
-  function saveState() {
-    try { localStorage.setItem('smarthome_state', JSON.stringify(state)); } catch(e) {}
+  const savedState = loadStoredState();
+  LEDS.forEach(l => {
+    state[l.id] = savedState[l.id] !== undefined ? savedState[l.id] : false;
+    networkStatus[l.id] = null; // null = henüz kontrol edilmedi
+  });
+
+  function saveToStorage() {
+    try {
+      localStorage.setItem('smarthome_state', JSON.stringify(state));
+    } catch (e) {}
   }
 
-  function fetchWithTimeout(url) {
+  // iOS uyumlu fetch wrapper — AbortSignal.timeout() iOS 15 altında yok
+  function fetchWithTimeout(url, timeoutMs) {
     return new Promise((resolve, reject) => {
-      const ctrl = new AbortController();
-      const t = setTimeout(() => { ctrl.abort(); reject(new Error('timeout')); }, TIMEOUT_MS);
-      fetch(url, { signal: ctrl.signal })
-        .then(r => { clearTimeout(t); resolve(r); })
-        .catch(e => { clearTimeout(t); reject(e); });
+      const controller = new AbortController();
+      const timer = setTimeout(() => {
+        controller.abort();
+        reject(new Error('timeout'));
+      }, timeoutMs);
+
+      fetch(url, { signal: controller.signal })
+        .then(res => { clearTimeout(timer); resolve(res); })
+        .catch(err => { clearTimeout(timer); reject(err); });
     });
   }
 
-  function updateClock() {
+  // SAAT VE SELAMLAMA
+  function updateClockAndUI() {
     const now = new Date();
-    const h = now.getHours(), m = String(now.getMinutes()).padStart(2,'0');
-    document.getElementById('liveTime').textContent = `${String(h).padStart(2,'0')}:${m}`;
-    document.getElementById('liveDate').textContent = now.toLocaleDateString('tr-TR', { day:'numeric', month:'long', weekday:'long' });
-    let g = 'İyi Geceler';
-    if (h >= 5  && h < 12) g = 'Günaydın';
-    else if (h >= 12 && h < 17) g = 'Tünaydın';
-    else if (h >= 17 && h < 22) g = 'İyi Akşamlar';
-    document.getElementById('greetingText').textContent = g;
+    const hours = now.getHours();
+    const minutes = String(now.getMinutes()).padStart(2, '0');
+    document.getElementById('liveTime').textContent = `${String(hours).padStart(2, '0')}:${minutes}`;
+
+    const options = { day: 'numeric', month: 'long', weekday: 'long' };
+    document.getElementById('liveDate').textContent = now.toLocaleDateString('tr-TR', options);
+
+    let greeting = 'İyi Geceler';
+    if (hours >= 5 && hours < 12) greeting = 'Günaydın';
+    else if (hours >= 12 && hours < 17) greeting = 'Tünaydın';
+    else if (hours >= 17 && hours < 22) greeting = 'İyi Akşamlar';
+    document.getElementById('greetingText').textContent = greeting;
   }
 
   function renderCards() {
@@ -173,21 +360,53 @@
     grid.innerHTML = '';
     LEDS.forEach(led => {
       const isOn = state[led.id];
+      const isOnline = networkStatus[led.id];   // true | false | null
+      const isOffline = isOnline === false;
+
       const card = document.createElement('div');
-      card.className = 'led-card' + (isOn ? ' on' : '');
+      let cls = 'led-card';
+      if (isOn)      cls += ' on';
+      if (isOffline) cls += ' offline';
+      card.className = cls;
       card.id = 'card-' + led.id;
+
+      let statusText;
+      if (isOffline) {
+        statusText = isOn ? 'Açık (çevrimdışı)' : 'Ulaşılamıyor';
+      } else {
+        statusText = isOn ? 'Açık' : 'Kapalı';
+      }
+
       card.innerHTML = `
+        <span class="offline-badge">⚠️</span>
         <div class="led-card-top">
           <span class="led-icon">${led.icon}</span>
           <div class="led-status-dot"></div>
         </div>
         <div class="led-card-bottom">
           <div class="led-name">${led.name}</div>
-          <div class="led-status-text">${isOn ? 'Açık' : 'Kapalı'}</div>
-        </div>`;
+          <div class="led-status-text">${statusText}</div>
+        </div>
+      `;
       card.onclick = () => toggle(led);
       grid.appendChild(card);
     });
+  }
+
+  async function checkAllStatuses() {
+    await Promise.all(LEDS.map(async (led) => {
+      try {
+        const res = await fetchWithTimeout(`http://${led.host}/status`, FETCH_TIMEOUT_MS);
+        const data = await res.json();
+        state[led.id] = data.status === 'on';
+        networkStatus[led.id] = true;
+      } catch {
+        networkStatus[led.id] = false;
+        // state[led.id] değiştirilmiyor → son bilinen durum korunur
+      }
+    }));
+    saveToStorage();
+    renderCards();
   }
 
   async function toggle(led) {
@@ -196,27 +415,31 @@
     card.classList.add('loading');
 
     try {
-      await fetchWithTimeout(`http://${led.host}/led1/${action}`);
+      await fetchWithTimeout(`http://${led.host}/led1/${action}`, FETCH_TIMEOUT_MS);
       state[led.id] = !state[led.id];
-      saveState();
+      networkStatus[led.id] = true;
+      saveToStorage();
       renderCards();
       showToast(`${led.name} ${state[led.id] ? 'açıldı' : 'kapatıldı'}`, 'success');
     } catch {
-      // Yine de durumu değiştir — komut gönderilmiş olabilir
-      state[led.id] = !state[led.id];
-      saveState();
+      showToast(`${led.name} — Bağlantı hatası`, 'error');
+      networkStatus[led.id] = false;
       renderCards();
-      showToast(`${led.name} ${state[led.id] ? 'açıldı' : 'kapatıldı'} (yanıt gelmedi)`, 'success');
     }
   }
 
   async function allLeds(action) {
     await Promise.all(LEDS.map(led =>
-      fetchWithTimeout(`http://${led.host}/led1/${action}`)
-        .catch(() => {})
+      fetchWithTimeout(`http://${led.host}/led1/${action}`, FETCH_TIMEOUT_MS)
+        .then(() => {
+          state[led.id] = action === 'on';
+          networkStatus[led.id] = true;
+        })
+        .catch(() => {
+          networkStatus[led.id] = false;
+        })
     ));
-    LEDS.forEach(l => { state[l.id] = action === 'on'; });
-    saveState();
+    saveToStorage();
     renderCards();
     showToast(action === 'on' ? 'Tüm odalar açıldı' : 'Tüm odalar kapatıldı', 'success');
   }
@@ -230,16 +453,41 @@
     toastTimer = setTimeout(() => { t.className = 'toast'; }, 2400);
   }
 
-  if ('serviceWorker' in navigator) navigator.serviceWorker.register('service-worker.js?v=4');
+  // Service Worker kaydı
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('service-worker.js?v=3');
+  }
 
-  updateClock();
-  setInterval(updateClock, 1000);
-  renderCards();
+  // İlk yükleme
+  updateClockAndUI();
+  setInterval(updateClockAndUI, 1000);
 
+  renderCards(); // localStorage'daki durumu hemen göster
+  checkAllStatuses(); // ardından ağdan gerçek durumu çek
+
+  // Her 5 saniyede otomatik kontrol
+  setInterval(checkAllStatuses, 5000);
+
+  // Arka plandan geri dönünce (iOS için kritik)
   document.addEventListener('visibilitychange', () => {
-    if (document.visibilityState === 'visible') updateClock();
+    if (document.visibilityState === 'visible') {
+      updateClockAndUI();
+      checkAllStatuses();
+    }
   });
-  window.addEventListener('pageshow', e => { if (e.persisted) updateClock(); });
+
+  // iOS PWA: sayfa focus'u alınca da kontrol et
+  window.addEventListener('focus', () => {
+    checkAllStatuses();
+  });
+
+  // iOS PWA: pageshow eventi (cache'den restore edilince tetiklenir)
+  window.addEventListener('pageshow', (e) => {
+    if (e.persisted) {
+      updateClockAndUI();
+      checkAllStatuses();
+    }
+  });
 </script>
 </body>
 </html>
