@@ -119,7 +119,7 @@
       -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
       -webkit-touch-callout: none; /* iOS uzun basış menüsünü kapatır */
-      touch-action: manipulation;
+      touch-action: none; /* tarayıcı kaydırma/jest için pointercancel göndermesin */
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -128,6 +128,13 @@
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
       position: relative;
       overflow: hidden;
+    }
+
+    .led-card * {
+      pointer-events: none;
+      -webkit-user-select: none;
+      user-select: none;
+      -webkit-touch-callout: none;
     }
 
     .led-card:active { transform: scale(0.95); }
@@ -630,6 +637,8 @@ const icon = document.createElement('link');
 
   // Uzun basışta çıkan sistem menüsünü engelle
   gridEl.addEventListener('contextmenu', (e) => e.preventDefault());
+  gridEl.addEventListener('selectstart', (e) => e.preventDefault());
+  gridEl.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
 
   let toastTimer;
   function showToast(msg, type = '') {
