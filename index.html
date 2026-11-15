@@ -116,7 +116,10 @@
       -webkit-backdrop-filter: blur(25px);
       transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       user-select: none;
+      -webkit-user-select: none;
       -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none; /* iOS uzun basış menüsünü kapatır */
+      touch-action: manipulation;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -124,9 +127,25 @@
       height: 118px;
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
       position: relative;
+      overflow: hidden;
     }
 
     .led-card:active { transform: scale(0.95); }
+
+    /* 2 sn dolan ilerleme çubuğu */
+    .led-card::after {
+      content: '';
+      position: absolute;
+      left: 0; bottom: 0;
+      height: 3px; width: 0;
+      background: rgba(255,255,255,0.7);
+      border-radius: 0 3px 3px 0;
+    }
+    .led-card.pressing::after {
+      width: 100%;
+      transition: width 1s linear;
+    }
+    .led-card.pressing { transform: scale(0.96); }
 
     /* Açık kart: hem online hem on */
     .led-card.on {
@@ -258,6 +277,52 @@
     .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .toast.success { color: #ffffff; }
     .toast.error { border-color: rgba(248,113,113,0.3); color: #f87171; }
+
+    /* ===== Zorla menüsü (bottom sheet) ===== */
+    .force-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s;
+      z-index: 100;
+    }
+    .force-overlay.show { opacity: 1; pointer-events: auto; }
+
+    .force-sheet {
+      position: fixed;
+      left: 50%; bottom: 0;
+      width: 100%; max-width: 420px;
+      transform: translate(-50%, 100%);
+      background: rgba(24,24,30,0.98);
+      border: 1px solid var(--card-border);
+      border-radius: 26px 26px 0 0;
+      padding: 22px 20px calc(22px + env(safe-area-inset-bottom));
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 101;
+    }
+    .force-overlay.show .force-sheet { transform: translate(-50%, 0); }
+
+    .force-title { font-size: 15px; font-weight: 600; text-align: center; }
+    .force-sub { font-size: 11px; color: var(--text-muted); text-align: center; margin: 4px 0 16px; }
+
+    .force-btn {
+      width: 100%;
+      border: 1px solid var(--card-border);
+      background: rgba(255,255,255,0.05);
+      color: var(--text);
+      font-size: 14px; font-weight: 500;
+      padding: 15px;
+      border-radius: 16px;
+      margin-bottom: 10px;
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .force-btn:active { transform: scale(0.97); }
+    .force-btn.on  { border-color: rgba(255,255,255,0.3); }
+    .force-btn.off { border-color: rgba(248,113,113,0.35); color: #f87171; }
+    .force-btn.cancel { background: transparent; color: var(--text-muted); margin-bottom: 0; }
   </style>
 </head>
 <body>
@@ -283,6 +348,16 @@
 </div>
 
 <div class="toast" id="toast"></div>
+
+<div class="force-overlay" id="forceOverlay">
+  <div class="force-sheet">
+    <div class="force-title" id="forceTitle">Oda</div>
+    <div class="force-sub">Mevcut durum yok sayılarak komut gönderilir</div>
+    <button class="force-btn on"  onclick="forceSet('on')">⚡ Zorla Aç</button>
+    <button class="force-btn off" onclick="forceSet('off')">⛔ Zorla Kapat</button>
+    <button class="force-btn cancel" onclick="closeForceMenu()">İptal</button>
+  </div>
+</div>
 
 <script>
 const icon = document.createElement('link');
@@ -355,7 +430,24 @@ const icon = document.createElement('link');
     document.getElementById('greetingText').textContent = greeting;
   }
 
+  // ===== UZUN BASMA / ZORLA AÇ-KAPAT DEĞİŞKENLERİ =====
+  const HOLD_MS = 1000;
+  const MOVE_TOLERANCE = 10; // px — parmak kayarsa iptal
+
+  let isHolding = false;
+  let pendingRender = false;
+  let holdTimer = null;
+  let holdFired = false;
+  let holdCard = null;
+  let holdLed = null;
+  let startX = 0, startY = 0;
+  let forceTarget = null; // menüde seçili oda
+
   function renderCards() {
+    // Basılı tutma sırasında DOM'u silme, bitince çiz
+    if (isHolding) { pendingRender = true; return; }
+    pendingRender = false;
+
     const grid = document.getElementById('ledGrid');
     grid.innerHTML = '';
     LEDS.forEach(led => {
@@ -388,7 +480,7 @@ const icon = document.createElement('link');
           <div class="led-status-text">${statusText}</div>
         </div>
       `;
-      card.onclick = () => toggle(led);
+      // Tıklama artık aşağıdaki pointer olaylarıyla yönetiliyor
       grid.appendChild(card);
     });
   }
@@ -412,7 +504,7 @@ const icon = document.createElement('link');
   async function toggle(led) {
     const action = state[led.id] ? 'off' : 'on';
     const card = document.getElementById('card-' + led.id);
-    card.classList.add('loading');
+    if (card) card.classList.add('loading');
 
     try {
       await fetchWithTimeout(`http://${led.host}/led1/${action}`, FETCH_TIMEOUT_MS);
@@ -443,6 +535,101 @@ const icon = document.createElement('link');
     renderCards();
     showToast(action === 'on' ? 'Tüm odalar açıldı' : 'Tüm odalar kapatıldı', 'success');
   }
+
+  // ===== UZUN BASMA / ZORLA AÇ-KAPAT =====
+  function endHold() {
+    clearTimeout(holdTimer);
+    holdTimer = null;
+    if (holdCard) holdCard.classList.remove('pressing');
+    holdCard = null;
+    isHolding = false;
+    if (pendingRender) renderCards();
+  }
+
+  function openForceMenu(led) {
+    forceTarget = led;
+    document.getElementById('forceTitle').textContent = `${led.icon} ${led.name}`;
+    document.getElementById('forceOverlay').classList.add('show');
+  }
+
+  function closeForceMenu() {
+    document.getElementById('forceOverlay').classList.remove('show');
+    forceTarget = null;
+  }
+
+  // Mevcut durumu HİÇ kontrol etmeden komutu gönderir
+  async function forceSet(action) {
+    const led = forceTarget;
+    if (!led) return;
+    closeForceMenu();
+
+    try {
+      await fetchWithTimeout(`http://${led.host}/led1/${action}`, FETCH_TIMEOUT_MS);
+      state[led.id] = (action === 'on');   // durumu komuta göre ayarla
+      networkStatus[led.id] = true;
+      saveToStorage();
+      renderCards();
+      showToast(`${led.name} zorla ${action === 'on' ? 'açıldı' : 'kapatıldı'}`, 'success');
+    } catch {
+      networkStatus[led.id] = false;
+      renderCards();
+      showToast(`${led.name} — Bağlantı hatası`, 'error');
+    }
+  }
+
+  // Karartılmış alana dokununca menüyü kapat
+  document.getElementById('forceOverlay').addEventListener('click', (e) => {
+    if (e.target.id === 'forceOverlay') closeForceMenu();
+  });
+
+  // Event delegation: kartlar yeniden çizilse bile çalışır
+  const gridEl = document.getElementById('ledGrid');
+
+  gridEl.addEventListener('pointerdown', (e) => {
+    const card = e.target.closest('.led-card');
+    if (!card) return;
+    const led = LEDS.find(l => 'card-' + l.id === card.id);
+    if (!led) return;
+
+    isHolding = true;
+    holdFired = false;
+    holdCard = card;
+    holdLed = led;
+    startX = e.clientX;
+    startY = e.clientY;
+
+    card.classList.add('pressing');
+
+    holdTimer = setTimeout(() => {
+      holdFired = true;
+      if (navigator.vibrate) navigator.vibrate(40); // Android'de titreşim
+      endHold();
+      openForceMenu(led);
+    }, HOLD_MS);
+  });
+
+  gridEl.addEventListener('pointermove', (e) => {
+    if (!isHolding) return;
+    if (Math.abs(e.clientX - startX) > MOVE_TOLERANCE ||
+        Math.abs(e.clientY - startY) > MOVE_TOLERANCE) {
+      holdLed = null;       // kayma = iptal, toggle de yapma
+      endHold();
+    }
+  });
+
+  gridEl.addEventListener('pointerup', () => {
+    if (!isHolding) return;       // zaten tetiklendi veya iptal edildi
+    const led = holdLed;
+    const fired = holdFired;
+    endHold();
+    if (!fired && led) toggle(led); // 2 sn dolmadan bırakıldı → normal toggle
+  });
+
+  gridEl.addEventListener('pointercancel', () => { holdLed = null; endHold(); });
+  gridEl.addEventListener('pointerleave',  () => { if (isHolding) { holdLed = null; endHold(); } });
+
+  // Uzun basışta çıkan sistem menüsünü engelle
+  gridEl.addEventListener('contextmenu', (e) => e.preventDefault());
 
   let toastTimer;
   function showToast(msg, type = '') {
