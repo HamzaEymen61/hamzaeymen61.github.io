@@ -1,14 +1,21 @@
 <!DOCTYPE html>
-<html lang="tr"><head>
+<html lang="tr">
+<head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <meta name="theme-color" content="#0a0a0c">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Akıllı Ev">
+  <link rel="apple-touch-icon" href="https://github.com/HamzaEymen61/foto/raw/main/icon-192.png">
   <title>Akıllı Ev</title>
-    <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
 
     :root {
       --bg-gradient: radial-gradient(circle at 50% 0%, #1a1a24 0%, #0a0a0c 70%);
@@ -17,113 +24,127 @@
       --card-border-active: rgba(255, 255, 255, 0.25);
       --text: #ffffff;
       --text-muted: #71717a;
-      --glow-color: rgba(255, 255, 255, 0.15); 
+      --glow-color: rgba(255, 255, 255, 0.15);
       --on-text: #ffffff;
     }
 
-    body {
-      background: var(--bg-gradient);
+    html, body {
+      height: 100%;
+      background: #0a0a0c;
+      background-image: var(--bg-gradient);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+      overscroll-behavior: none;
+      overflow: hidden;
+    }
+
+    body {
       height: 100dvh;
       display: flex;
       justify-content: center;
-      align-items: center;
-      overflow: hidden;
-      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      align-items: stretch;
+      padding-top: max(12px, env(safe-area-inset-top));
+      padding-bottom: max(16px, env(safe-area-inset-bottom));
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
     }
 
     .app {
       width: 100%;
-      max-width: 420px;
+      max-width: 460px;
       height: 100%;
-      padding: 30px 24px;
+      padding: 12px 18px 10px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
+      gap: 12px;
     }
 
-    header { 
+    /* Üst Saat & Karşılama Alanı */
+    header {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      margin-top: 15px;
-      margin-bottom: 5px;
-      min-height: 85px;
+      padding-top: 6px;
+      flex-shrink: 0;
     }
 
     .live-time {
-      font-size: 46px;
+      font-size: clamp(38px, 11vw, 48px);
       font-weight: 200;
-      letter-spacing: -1.2px;
+      letter-spacing: -1.5px;
       color: #ffffff;
-      line-height: 0.95;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
     }
 
     .greeting-text {
-      font-size: 13px;
+      font-size: 14px;
       font-weight: 500;
       color: #ffffff;
       margin-top: 6px;
       letter-spacing: -0.1px;
       opacity: 0.85;
-      min-height: 16px;
     }
 
     .live-date {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 400;
       color: var(--text-muted);
-      margin-top: 4px;
+      margin-top: 3px;
       letter-spacing: 0.01em;
       text-transform: capitalize;
-      min-height: 14px;
     }
 
     .section-label {
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-bottom: 14px;
-      margin-top: 10px;
-      opacity: 0.7;
+      margin-bottom: 10px;
+      padding-left: 4px;
+      opacity: 0.75;
     }
 
+    /* Orta Alan - Tek Elle Erişim İçin Hafif Aşağı Dengeli */
     .main-content {
-      flex-grow: 1;
+      flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      min-height: 0;
     }
 
     .grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 12px;
     }
 
     .led-card {
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 22px;
+      border-radius: 24px;
       padding: 16px;
       cursor: pointer;
       backdrop-filter: blur(25px);
       -webkit-backdrop-filter: blur(25px);
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+                  background 0.35s ease,
+                  border-color 0.35s ease,
+                  box-shadow 0.35s ease,
+                  opacity 0.3s ease;
       user-select: none;
       -webkit-user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      -webkit-touch-callout: none; /* iOS uzun basış menüsünü kapatır */
-      touch-action: none; /* tarayıcı kaydırma/jest için pointercancel göndermesin */
+      -webkit-touch-callout: none;
+      touch-action: none;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: flex-start;
-      height: 118px;
+      height: clamp(106px, 15.5dvh, 128px);
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
       position: relative;
       overflow: hidden;
@@ -136,72 +157,93 @@
       -webkit-touch-callout: none;
     }
 
-    .led-card:active { transform: scale(0.95); }
+    .led-card:active {
+      transform: scale(0.95);
+    }
 
-    /* 2 sn dolan ilerleme çubuğu */
+    /* 1 sn dolan uzun basma çubuğu */
     .led-card::after {
       content: '';
       position: absolute;
-      left: 0; bottom: 0;
-      height: 3px; width: 0;
-      background: rgba(255,255,255,0.7);
+      left: 0;
+      bottom: 0;
+      height: 3.5px;
+      width: 0;
+      background: rgba(255, 255, 255, 0.75);
       border-radius: 0 3px 3px 0;
     }
+
     .led-card.pressing::after {
       width: 100%;
       transition: width 1s linear;
     }
-    .led-card.pressing { transform: scale(0.96); }
+
+    .led-card.pressing {
+      transform: scale(0.95);
+    }
 
     /* Açık kart: hem online hem on */
     .led-card.on {
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.065);
       border-color: var(--card-border-active);
       box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35), 0 0 20px var(--glow-color);
     }
 
-    /* Offline ama son durum "açık" — soluk parlak */
+    /* Offline ama son durum "açık" */
     .led-card.on.offline {
       opacity: 0.55;
-      border-color: rgba(255,255,255,0.12);
+      border-color: rgba(255, 255, 255, 0.12);
       box-shadow: none;
     }
 
     /* Offline ve kapalı */
-    .led-card.offline { opacity: 0.25; }
-
-    .led-card.loading { opacity: 0.4; pointer-events: none; }
-
-    .offline-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 10px;
-      opacity: 0.6;
-      display: none;
+    .led-card.offline {
+      opacity: 0.28;
     }
-    .led-card.offline .offline-badge { display: block; }
+
+    .led-card.loading {
+      opacity: 0.45;
+      pointer-events: none;
+    }
 
     .led-card-top {
       width: 100%;
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
     }
 
     .led-icon {
-      font-size: 24px;
+      font-size: 26px;
+      line-height: 1;
       transition: transform 0.3s ease;
     }
-    
-    .led-card.on .led-icon { transform: scale(1.06); }
+
+    .led-card.on .led-icon {
+      transform: scale(1.06);
+    }
+
+    .led-top-right {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .offline-badge {
+      font-size: 11px;
+      opacity: 0.75;
+      display: none;
+    }
+
+    .led-card.offline .offline-badge {
+      display: inline-block;
+    }
 
     .led-status-dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      margin-top: 6px;
+      background: rgba(255, 255, 255, 0.12);
       transition: all 0.3s ease;
     }
 
@@ -214,188 +256,225 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      width: 100%;
     }
 
     .led-name {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
       color: var(--text-muted);
-      letter-spacing: -0.1px;
+      letter-spacing: -0.2px;
       transition: color 0.3s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 100%;
     }
-    
-    .led-card.on .led-name { color: var(--on-text); }
+
+    .led-card.on .led-name {
+      color: var(--on-text);
+    }
 
     .led-status-text {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 500;
       color: var(--text-muted);
-      margin-top: 3px;
+      margin-top: 2px;
     }
 
-    .led-card.on .led-status-text { color: #ffffff; opacity: 0.85; }
+    .led-card.on .led-status-text {
+      color: #ffffff;
+      opacity: 0.85;
+    }
+
+    /* Alt Merkezi Senaryolar - Başparmak Alanı */
+    .bottom-section {
+      flex-shrink: 0;
+      padding-top: 4px;
+    }
 
     .all-controls {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 8px;
-      margin-bottom: 8px;
+      gap: 12px;
     }
 
     .all-btn {
-      background: rgba(255, 255, 255, 0.02);
+      background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--card-border);
-      border-radius: 18px;
+      border-radius: 20px;
       color: var(--text);
-      font-size: 12px;
+      font-size: 13px;
       font-weight: 500;
-      padding: 15px;
+      min-height: 52px;
+      padding: 14px 12px;
       cursor: pointer;
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
-      transition: all 0.3s;
-      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.2s ease, background 0.25s ease, border-color 0.25s ease;
       letter-spacing: -0.1px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
     }
 
-    .all-btn:active { transform: scale(0.96); }
+    .all-btn:active {
+      transform: scale(0.96);
+      background: rgba(255, 255, 255, 0.07);
+    }
 
+    /* Bildirim (Toast) - Üstten veya Alt Butonların Üstünden Görünür */
     .toast {
       position: fixed;
-      bottom: 35px;
+      bottom: calc(92px + env(safe-area-inset-bottom));
       left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: rgba(20, 20, 25, 0.95);
+      transform: translateX(-50%) translateY(20px);
+      background: rgba(22, 22, 28, 0.96);
       border: 1px solid var(--card-border);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: 99px;
       color: var(--text);
-      font-size: 12px;
-      padding: 11px 24px;
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1), opacity 0.3s;
+      font-size: 13px;
+      font-weight: 500;
+      padding: 11px 22px;
+      white-space: nowrap;
+      max-width: 90vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.1), opacity 0.25s;
       opacity: 0;
+      pointer-events: none;
       z-index: 99;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
     }
 
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .toast.success { color: #ffffff; }
-    .toast.error { border-color: rgba(248,113,113,0.3); color: #f87171; }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
 
-    /* ===== Zorla menüsü (bottom sheet) ===== */
+    .toast.success {
+      color: #ffffff;
+    }
+
+    .toast.error {
+      border-color: rgba(248, 113, 113, 0.35);
+      color: #f87171;
+    }
+
+    /* ===== Zorla Menüsü (Mobil Bottom Sheet) ===== */
     .force-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.55);
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.6);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.25s;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
       z-index: 100;
     }
-    .force-overlay.show { opacity: 1; pointer-events: auto; }
+
+    .force-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     .force-sheet {
       position: fixed;
-      left: 50%; bottom: 0;
-      width: 100%; max-width: 420px;
+      left: 50%;
+      bottom: 0;
+      width: 100%;
+      max-width: 460px;
       transform: translate(-50%, 100%);
-      background: rgba(24,24,30,0.98);
-      border: 1px solid var(--card-border);
-      border-radius: 26px 26px 0 0;
-      padding: 22px 20px calc(22px + env(safe-area-inset-bottom));
+      background: rgba(22, 22, 28, 0.98);
+      border-top: 1px solid var(--card-border);
+      border-left: 1px solid var(--card-border);
+      border-right: 1px solid var(--card-border);
+      border-radius: 28px 28px 0 0;
+      padding: 12px 20px calc(20px + env(safe-area-inset-bottom));
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       z-index: 101;
     }
-    .force-overlay.show .force-sheet { transform: translate(-50%, 0); }
 
-    .force-title { font-size: 15px; font-weight: 600; text-align: center; }
-    .force-sub { font-size: 11px; color: var(--text-muted); text-align: center; margin: 4px 0 16px; }
+    .force-overlay.show .force-sheet {
+      transform: translate(-50%, 0);
+    }
+
+    .sheet-handle {
+      width: 36px;
+      height: 4px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.18);
+      margin: 0 auto 14px;
+    }
+
+    .force-title {
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .force-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      margin: 4px 0 18px;
+    }
 
     .force-btn {
       width: 100%;
+      min-height: 52px;
       border: 1px solid var(--card-border);
-      background: rgba(255,255,255,0.05);
+      background: rgba(255, 255, 255, 0.05);
       color: var(--text);
-      font-size: 14px; font-weight: 500;
-      padding: 15px;
-      border-radius: 16px;
+      font-size: 15px;
+      font-weight: 500;
+      padding: 14px;
+      border-radius: 18px;
       margin-bottom: 10px;
       cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
+      transition: transform 0.2s ease, background 0.2s ease;
     }
-    .force-btn:active { transform: scale(0.97); }
-    .force-btn.on  { border-color: rgba(255,255,255,0.3); }
-    .force-btn.off { border-color: rgba(248,113,113,0.35); color: #f87171; }
-    .force-btn.cancel { background: transparent; color: var(--text-muted); margin-bottom: 0; }
+
+    .force-btn:active {
+      transform: scale(0.97);
+    }
+
+    .force-btn.on {
+      border-color: rgba(255, 255, 255, 0.28);
+    }
+
+    .force-btn.off {
+      border-color: rgba(248, 113, 113, 0.35);
+      color: #f87171;
+    }
+
+    .force-btn.cancel {
+      background: transparent;
+      border-color: transparent;
+      color: var(--text-muted);
+      margin-bottom: 0;
+      margin-top: 2px;
+    }
   </style>
-<link rel="apple-touch-icon" href="https://github.com/HamzaEymen61/foto/raw/main/icon-192.png"></head>
+</head>
 <body>
 <div class="app">
   <header>
     <div class="live-time" id="liveTime">21:52</div>
     <div class="greeting-text" id="greetingText">İyi Akşamlar</div>
     <div class="live-date" id="liveDate">18 Kasım Çarşamba</div>
-    <div style="font-size:9px;color:#71717a;opacity:.6;margin-top:2px">sürüm: uzun-basma-1sn</div>
   </header>
 
   <div class="main-content">
     <p class="section-label">Odalar</p>
-    <div class="grid" id="ledGrid"><div class="led-card" id="card-led1">
-        <span class="offline-badge">⚠️</span>
-        <div class="led-card-top">
-          <span class="led-icon">🛏️</span>
-          <div class="led-status-dot"></div>
-        </div>
-        <div class="led-card-bottom">
-          <div class="led-name">Hamza Oda</div>
-          <div class="led-status-text">Kapalı</div>
-        </div>
-      </div><div class="led-card on" id="card-led2">
-        <span class="offline-badge">⚠️</span>
-        <div class="led-card-top">
-          <span class="led-icon">🛋️</span>
-          <div class="led-status-dot"></div>
-        </div>
-        <div class="led-card-bottom">
-          <div class="led-name">Salon</div>
-          <div class="led-status-text">Açık</div>
-        </div>
-      </div><div class="led-card" id="card-led3">
-        <span class="offline-badge">⚠️</span>
-        <div class="led-card-top">
-          <span class="led-icon">🍽️</span>
-          <div class="led-status-dot"></div>
-        </div>
-        <div class="led-card-bottom">
-          <div class="led-name">Mutfak</div>
-          <div class="led-status-text">Kapalı</div>
-        </div>
-      </div><div class="led-card on" id="card-led4">
-        <span class="offline-badge">⚠️</span>
-        <div class="led-card-top">
-          <span class="led-icon">🌸</span>
-          <div class="led-status-dot"></div>
-        </div>
-        <div class="led-card-bottom">
-          <div class="led-name">Ravza Oda</div>
-          <div class="led-status-text">Açık</div>
-        </div>
-      </div><div class="led-card" id="card-led5">
-        <span class="offline-badge">⚠️</span>
-        <div class="led-card-top">
-          <span class="led-icon">🌙</span>
-          <div class="led-status-dot"></div>
-        </div>
-        <div class="led-card-bottom">
-          <div class="led-name">Yatak Odası</div>
-          <div class="led-status-text">Kapalı</div>
-        </div>
-      </div></div>
+    <div class="grid" id="ledGrid"></div>
   </div>
 
-  <div>
+  <div class="bottom-section">
     <p class="section-label">Merkezi Senaryolar</p>
     <div class="all-controls">
       <button class="all-btn" onclick="allLeds('on')">✦ Tümünü Aç</button>
@@ -408,6 +487,7 @@
 
 <div class="force-overlay" id="forceOverlay">
   <div class="force-sheet">
+    <div class="sheet-handle"></div>
     <div class="force-title" id="forceTitle">Oda</div>
     <div class="force-sub">Mevcut durum yok sayılarak komut gönderilir</div>
     <button class="force-btn on" onclick="forceSet('on')">⚡ Zorla Aç</button>
@@ -417,24 +497,19 @@
 </div>
 
 <script>
-const icon = document.createElement('link');
-  icon.rel = 'apple-touch-icon';
-  icon.href = 'https://github.com/HamzaEymen61/foto/raw/main/icon-192.png'; // Linki kısaltalım
-  document.head.appendChild(icon);
   const LEDS = [
-    { id: 'led1', name: 'Hamza Oda',    host: 'hamza-oda.local',     icon: '🛏️' },
-    { id: 'led2', name: 'Salon',         host: 'salon.local',          icon: '🛋️' },
-    { id: 'led3', name: 'Mutfak',        host: 'mutfak.local',         icon: '🍽️' },
-    { id: 'led4', name: 'Ravza Oda',    host: 'ravza-oda.local',      icon: '🌸' },
-    { id: 'led5', name: 'Yatak Odası',  host: 'yatak-odasi.local',    icon: '🌙' },
+    { id: 'led1', name: 'Hamza Oda',   host: 'hamza-oda.local',   icon: '🛏️' },
+    { id: 'led2', name: 'Salon',       host: 'salon.local',       icon: '🛋️' },
+    { id: 'led3', name: 'Mutfak',      host: 'mutfak.local',      icon: '🍽️' },
+    { id: 'led4', name: 'Ravza Oda',   host: 'ravza-oda.local',   icon: '🌸' },
+    { id: 'led5', name: 'Yatak Odası', host: 'yatak-odasi.local', icon: '🌙' },
   ];
 
-  const FETCH_TIMEOUT_MS = 3000; // iOS için biraz daha uzun timeout
+  const FETCH_TIMEOUT_MS = 3000;
 
   const state = {};
   const networkStatus = {};
 
-  // localStorage'dan son bilinen durumu yükle
   function loadStoredState() {
     try {
       return JSON.parse(localStorage.getItem('smarthome_state')) || {};
@@ -446,7 +521,7 @@ const icon = document.createElement('link');
   const savedState = loadStoredState();
   LEDS.forEach(l => {
     state[l.id] = savedState[l.id] !== undefined ? savedState[l.id] : false;
-    networkStatus[l.id] = null; // null = henüz kontrol edilmedi
+    networkStatus[l.id] = null;
   });
 
   function saveToStorage() {
@@ -455,7 +530,6 @@ const icon = document.createElement('link');
     } catch (e) {}
   }
 
-  // iOS uyumlu fetch wrapper — AbortSignal.timeout() iOS 15 altında yok
   function fetchWithTimeout(url, timeoutMs) {
     return new Promise((resolve, reject) => {
       const controller = new AbortController();
@@ -470,7 +544,6 @@ const icon = document.createElement('link');
     });
   }
 
-  // SAAT VE SELAMLAMA
   function updateClockAndUI() {
     const now = new Date();
     const hours = now.getHours();
@@ -487,9 +560,9 @@ const icon = document.createElement('link');
     document.getElementById('greetingText').textContent = greeting;
   }
 
-  // ===== UZUN BASMA / ZORLA AÇ-KAPAT DEĞİŞKENLERİ =====
+  // ===== UZUN BASMA / ZORLA AÇ-KAPAT =====
   const HOLD_MS = 1000;
-  const MOVE_TOLERANCE = 10; // px — parmak kayarsa iptal
+  const MOVE_TOLERANCE = 12;
 
   let isHolding = false;
   let pendingRender = false;
@@ -498,10 +571,9 @@ const icon = document.createElement('link');
   let holdCard = null;
   let holdLed = null;
   let startX = 0, startY = 0;
-  let forceTarget = null; // menüde seçili oda
+  let forceTarget = null;
 
   function renderCards() {
-    // Basılı tutma sırasında DOM'u silme, bitince çiz
     if (isHolding) { pendingRender = true; return; }
     pendingRender = false;
 
@@ -509,12 +581,12 @@ const icon = document.createElement('link');
     grid.innerHTML = '';
     LEDS.forEach(led => {
       const isOn = state[led.id];
-      const isOnline = networkStatus[led.id];   // true | false | null
+      const isOnline = networkStatus[led.id];
       const isOffline = isOnline === false;
 
       const card = document.createElement('div');
       let cls = 'led-card';
-      if (isOn)      cls += ' on';
+      if (isOn) cls += ' on';
       if (isOffline) cls += ' offline';
       card.className = cls;
       card.id = 'card-' + led.id;
@@ -527,17 +599,18 @@ const icon = document.createElement('link');
       }
 
       card.innerHTML = `
-        <span class="offline-badge">⚠️</span>
         <div class="led-card-top">
           <span class="led-icon">${led.icon}</span>
-          <div class="led-status-dot"></div>
+          <div class="led-top-right">
+            <span class="offline-badge">⚠️</span>
+            <div class="led-status-dot"></div>
+          </div>
         </div>
         <div class="led-card-bottom">
           <div class="led-name">${led.name}</div>
           <div class="led-status-text">${statusText}</div>
         </div>
       `;
-      // Tıklama artık aşağıdaki pointer olaylarıyla yönetiliyor
       grid.appendChild(card);
     });
   }
@@ -551,7 +624,6 @@ const icon = document.createElement('link');
         networkStatus[led.id] = true;
       } catch {
         networkStatus[led.id] = false;
-        // state[led.id] değiştirilmiyor → son bilinen durum korunur
       }
     }));
     saveToStorage();
@@ -593,7 +665,6 @@ const icon = document.createElement('link');
     showToast(action === 'on' ? 'Tüm odalar açıldı' : 'Tüm odalar kapatıldı', 'success');
   }
 
-  // ===== UZUN BASMA / ZORLA AÇ-KAPAT =====
   function endHold() {
     clearTimeout(holdTimer);
     holdTimer = null;
@@ -614,8 +685,6 @@ const icon = document.createElement('link');
     forceTarget = null;
   }
 
-  // Mevcut durumu kontrol etmeden, toplam 5 saniye boyunca komutu tekrar dener.
-  // Her deneme aynı aç/kapat komutunu gönderir; cihaz cevap verirse durur.
   async function forceSet(action) {
     const led = forceTarget;
     if (!led) return;
@@ -623,12 +692,10 @@ const icon = document.createElement('link');
 
     const url = `http://${led.host}/led1/${action}`;
     const deadline = Date.now() + 5000;
-    let lastError = null;
 
     while (Date.now() < deadline) {
       const remaining = deadline - Date.now();
       try {
-        // Bir denemenin tüm süreyi tüketmesini önle; kalan 5 sn içinde yeniden dene.
         await fetchWithTimeout(url, Math.min(1200, remaining));
         state[led.id] = (action === 'on');
         networkStatus[led.id] = true;
@@ -637,7 +704,6 @@ const icon = document.createElement('link');
         showToast(`${led.name} zorla ${action === 'on' ? 'açıldı' : 'kapatıldı'}`, 'success');
         return;
       } catch (err) {
-        lastError = err;
         const waitMs = Math.min(250, deadline - Date.now());
         if (waitMs > 0) await new Promise(resolve => setTimeout(resolve, waitMs));
       }
@@ -645,15 +711,13 @@ const icon = document.createElement('link');
 
     networkStatus[led.id] = false;
     renderCards();
-    showToast(`${led.name} — 5 saniye denendi, bağlantı kurulamadı`, 'error');
+    showToast(`${led.name} — 5 sn denendi, ulaşılamadı`, 'error');
   }
 
-  // Karartılmış alana dokununca menüyü kapat
   document.getElementById('forceOverlay').addEventListener('click', (e) => {
     if (e.target.id === 'forceOverlay') closeForceMenu();
   });
 
-  // Event delegation: kartlar yeniden çizilse bile çalışır
   const gridEl = document.getElementById('ledGrid');
 
   gridEl.addEventListener('pointerdown', (e) => {
@@ -673,7 +737,7 @@ const icon = document.createElement('link');
 
     holdTimer = setTimeout(() => {
       holdFired = true;
-      if (navigator.vibrate) navigator.vibrate(40); // Android'de titreşim
+      if (navigator.vibrate) navigator.vibrate(40);
       endHold();
       openForceMenu(led);
     }, HOLD_MS);
@@ -683,23 +747,22 @@ const icon = document.createElement('link');
     if (!isHolding) return;
     if (Math.abs(e.clientX - startX) > MOVE_TOLERANCE ||
         Math.abs(e.clientY - startY) > MOVE_TOLERANCE) {
-      holdLed = null;       // kayma = iptal, toggle de yapma
+      holdLed = null;
       endHold();
     }
   });
 
   gridEl.addEventListener('pointerup', () => {
-    if (!isHolding) return;       // zaten tetiklendi veya iptal edildi
+    if (!isHolding) return;
     const led = holdLed;
     const fired = holdFired;
     endHold();
-    if (!fired && led) toggle(led); // 2 sn dolmadan bırakıldı → normal toggle
+    if (!fired && led) toggle(led);
   });
 
   gridEl.addEventListener('pointercancel', () => { holdLed = null; endHold(); });
   gridEl.addEventListener('pointerleave',  () => { if (isHolding) { holdLed = null; endHold(); } });
 
-  // Uzun basışta çıkan sistem menüsünü engelle
   gridEl.addEventListener('contextmenu', (e) => e.preventDefault());
   gridEl.addEventListener('selectstart', (e) => e.preventDefault());
   gridEl.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
@@ -713,22 +776,18 @@ const icon = document.createElement('link');
     toastTimer = setTimeout(() => { t.className = 'toast'; }, 2400);
   }
 
-  // Service Worker kaydı
   if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js?v=3');
   }
 
-  // İlk yükleme
   updateClockAndUI();
   setInterval(updateClockAndUI, 1000);
 
-  renderCards(); // localStorage'daki durumu hemen göster
-  checkAllStatuses(); // ardından ağdan gerçek durumu çek
+  renderCards();
+  checkAllStatuses();
 
-  // Her 5 saniyede otomatik kontrol
   setInterval(checkAllStatuses, 5000);
 
-  // Arka plandan geri dönünce (iOS için kritik)
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
       updateClockAndUI();
@@ -736,12 +795,10 @@ const icon = document.createElement('link');
     }
   });
 
-  // iOS PWA: sayfa focus'u alınca da kontrol et
   window.addEventListener('focus', () => {
     checkAllStatuses();
   });
 
-  // iOS PWA: pageshow eventi (cache'den restore edilince tetiklenir)
   window.addEventListener('pageshow', (e) => {
     if (e.persisted) {
       updateClockAndUI();
@@ -749,6 +806,5 @@ const icon = document.createElement('link');
     }
   });
 </script>
-
-
-</body></html>
+</body>
+</html>
