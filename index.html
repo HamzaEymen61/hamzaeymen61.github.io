@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="tr">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a0a0c" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Akıllı Ev" />
+<html lang="tr"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0a0c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Akıllı Ev">
   <title>Akıllı Ev</title>
     <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -331,19 +330,69 @@
     .force-btn.off { border-color: rgba(248,113,113,0.35); color: #f87171; }
     .force-btn.cancel { background: transparent; color: var(--text-muted); margin-bottom: 0; }
   </style>
-</head>
+<link rel="apple-touch-icon" href="https://github.com/HamzaEymen61/foto/raw/main/icon-192.png"></head>
 <body>
 <div class="app">
   <header>
-    <div class="live-time" id="liveTime">--:--</div>
-    <div class="greeting-text" id="greetingText"></div>
-    <div class="live-date" id="liveDate"></div>
+    <div class="live-time" id="liveTime">21:42</div>
+    <div class="greeting-text" id="greetingText">İyi Akşamlar</div>
+    <div class="live-date" id="liveDate">18 Kasım Çarşamba</div>
     <div style="font-size:9px;color:#71717a;opacity:.6;margin-top:2px">sürüm: uzun-basma-1sn</div>
   </header>
 
   <div class="main-content">
     <p class="section-label">Odalar</p>
-    <div class="grid" id="ledGrid"></div>
+    <div class="grid" id="ledGrid"><div class="led-card" id="card-led1">
+        <span class="offline-badge">⚠️</span>
+        <div class="led-card-top">
+          <span class="led-icon">🛏️</span>
+          <div class="led-status-dot"></div>
+        </div>
+        <div class="led-card-bottom">
+          <div class="led-name">Hamza Oda</div>
+          <div class="led-status-text">Kapalı</div>
+        </div>
+      </div><div class="led-card on" id="card-led2">
+        <span class="offline-badge">⚠️</span>
+        <div class="led-card-top">
+          <span class="led-icon">🛋️</span>
+          <div class="led-status-dot"></div>
+        </div>
+        <div class="led-card-bottom">
+          <div class="led-name">Salon</div>
+          <div class="led-status-text">Açık</div>
+        </div>
+      </div><div class="led-card" id="card-led3">
+        <span class="offline-badge">⚠️</span>
+        <div class="led-card-top">
+          <span class="led-icon">🍽️</span>
+          <div class="led-status-dot"></div>
+        </div>
+        <div class="led-card-bottom">
+          <div class="led-name">Mutfak</div>
+          <div class="led-status-text">Kapalı</div>
+        </div>
+      </div><div class="led-card on" id="card-led4">
+        <span class="offline-badge">⚠️</span>
+        <div class="led-card-top">
+          <span class="led-icon">🌸</span>
+          <div class="led-status-dot"></div>
+        </div>
+        <div class="led-card-bottom">
+          <div class="led-name">Ravza Oda</div>
+          <div class="led-status-text">Açık</div>
+        </div>
+      </div><div class="led-card" id="card-led5">
+        <span class="offline-badge">⚠️</span>
+        <div class="led-card-top">
+          <span class="led-icon">🌙</span>
+          <div class="led-status-dot"></div>
+        </div>
+        <div class="led-card-bottom">
+          <div class="led-name">Yatak Odası</div>
+          <div class="led-status-text">Kapalı</div>
+        </div>
+      </div></div>
   </div>
 
   <div>
@@ -355,13 +404,13 @@
   </div>
 </div>
 
-<div class="toast" id="toast"></div>
+<div class="toast" id="toast">Yatak Odası kapatıldı</div>
 
 <div class="force-overlay" id="forceOverlay">
   <div class="force-sheet">
-    <div class="force-title" id="forceTitle">Oda</div>
+    <div class="force-title" id="forceTitle">🍽️ Mutfak</div>
     <div class="force-sub">Mevcut durum yok sayılarak komut gönderilir</div>
-    <button class="force-btn on"  onclick="forceSet('on')">⚡ Zorla Aç</button>
+    <button class="force-btn on" onclick="forceSet('on')">⚡ Zorla Aç</button>
     <button class="force-btn off" onclick="forceSet('off')">⛔ Zorla Kapat</button>
     <button class="force-btn cancel" onclick="closeForceMenu()">İptal</button>
   </div>
@@ -565,24 +614,38 @@ const icon = document.createElement('link');
     forceTarget = null;
   }
 
-  // Mevcut durumu HİÇ kontrol etmeden komutu gönderir
+  // Mevcut durumu kontrol etmeden, toplam 5 saniye boyunca komutu tekrar dener.
+  // Her deneme aynı aç/kapat komutunu gönderir; cihaz cevap verirse durur.
   async function forceSet(action) {
     const led = forceTarget;
     if (!led) return;
     closeForceMenu();
 
-    try {
-      await fetchWithTimeout(`http://${led.host}/led1/${action}`, FETCH_TIMEOUT_MS);
-      state[led.id] = (action === 'on');   // durumu komuta göre ayarla
-      networkStatus[led.id] = true;
-      saveToStorage();
-      renderCards();
-      showToast(`${led.name} zorla ${action === 'on' ? 'açıldı' : 'kapatıldı'}`, 'success');
-    } catch {
-      networkStatus[led.id] = false;
-      renderCards();
-      showToast(`${led.name} — Bağlantı hatası`, 'error');
+    const url = `http://${led.host}/led1/${action}`;
+    const deadline = Date.now() + 5000;
+    let lastError = null;
+
+    while (Date.now() < deadline) {
+      const remaining = deadline - Date.now();
+      try {
+        // Bir denemenin tüm süreyi tüketmesini önle; kalan 5 sn içinde yeniden dene.
+        await fetchWithTimeout(url, Math.min(1200, remaining));
+        state[led.id] = (action === 'on');
+        networkStatus[led.id] = true;
+        saveToStorage();
+        renderCards();
+        showToast(`${led.name} zorla ${action === 'on' ? 'açıldı' : 'kapatıldı'}`, 'success');
+        return;
+      } catch (err) {
+        lastError = err;
+        const waitMs = Math.min(250, deadline - Date.now());
+        if (waitMs > 0) await new Promise(resolve => setTimeout(resolve, waitMs));
+      }
     }
+
+    networkStatus[led.id] = false;
+    renderCards();
+    showToast(`${led.name} — 5 saniye denendi, bağlantı kurulamadı`, 'error');
   }
 
   // Karartılmış alana dokununca menüyü kapat
@@ -686,5 +749,6 @@ const icon = document.createElement('link');
     }
   });
 </script>
-</body>
-</html>
+
+
+</body></html>
