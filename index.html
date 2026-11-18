@@ -1,203 +1,187 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
-  <meta name="theme-color" content="#0a0a0c" />
-  <meta name="apple-mobile-web-app-capable" content="yes" />
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
-  <meta name="apple-mobile-web-app-title" content="Akıllı Ev" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="theme-color" content="#0d0d0f">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Akıllı Ev">
   <title>Akıllı Ev</title>
-    <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <link rel="apple-touch-icon" href="https://github.com/HamzaEymen61/foto/raw/main/icon-192.png">
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+    }
 
     :root {
-      --bg-gradient: radial-gradient(circle at 50% 0%, #1a1a24 0%, #0a0a0c 70%);
-      --card-bg: rgba(255, 255, 255, 0.03);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-border-active: rgba(255, 255, 255, 0.25);
+      --bg-color: #0d0d0f;
+      --bg-gradient: radial-gradient(circle at 50% 0%, #19191d 0%, #0d0d0f 65%);
+      --card-bg: #151518;
+      --card-bg-on: #1a1a1f;
+      --card-border: rgba(255, 255, 255, 0.06);
+      --card-border-on: rgba(255, 255, 255, 0.16);
       --text: #ffffff;
-      --text-muted: #71717a;
-      --glow-color: rgba(255, 255, 255, 0.15); 
-      --on-text: #ffffff;
+      --text-muted: #787880;
     }
 
     html, body {
-      width: 100%;
       height: 100%;
-      background: #0a0a0c;
+      background-color: var(--bg-color);
       background-image: var(--bg-gradient);
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', Roboto, sans-serif;
       overflow: hidden;
-      overscroll-behavior: none;
+      user-select: none;
+      -webkit-user-select: none;
     }
 
     body {
-      height: 100dvh;
       display: flex;
       justify-content: center;
-      align-items: center;
       padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
     .app {
       width: 100%;
-      max-width: 420px;
-      height: 100%;
-      padding: 24px 20px;
+      max-width: 430px;
+      height: 100dvh;
+      padding: 20px 22px 24px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
-    header { 
+    header {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      margin-top: 10px;
-      margin-bottom: 5px;
-      min-height: 85px;
+      padding-top: 12px;
+      flex-shrink: 0;
     }
 
     .live-time {
-      font-size: 46px;
-      font-weight: 200;
-      letter-spacing: -1.2px;
+      font-size: 52px;
+      font-weight: 300;
+      letter-spacing: -1.5px;
       color: #ffffff;
-      line-height: 0.95;
+      line-height: 1;
     }
 
     .greeting-text {
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 500;
       color: #ffffff;
-      margin-top: 6px;
-      letter-spacing: -0.1px;
-      opacity: 0.85;
-      min-height: 16px;
+      margin-top: 8px;
+      opacity: 0.92;
     }
 
     .live-date {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 400;
       color: var(--text-muted);
       margin-top: 4px;
-      letter-spacing: 0.01em;
       text-transform: capitalize;
-      min-height: 14px;
+    }
+
+    .version-tag {
+      font-size: 10px;
+      color: var(--text-muted);
+      opacity: 0.55;
+      margin-top: 3px;
+    }
+
+    .main-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      min-height: 0;
+      margin: 12px 0;
     }
 
     .section-label {
-      font-size: 10px;
+      font-size: 11px;
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--text-muted);
-      margin-bottom: 10px;
-      margin-top: 6px;
-      opacity: 0.7;
-    }
-
-    .main-content {
-      flex-grow: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
+      margin-bottom: 12px;
+      padding-left: 2px;
     }
 
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      width: 100%;
-    }
-
-    /* 5. kart tek kaldığında diğerleriyle aynı boyutta olup tam ortada durur */
-    .grid .led-card:nth-child(odd):last-child {
-      grid-column: 1 / -1;
-      justify-self: center;
-      width: calc(50% - 6px);
+      gap: 14px;
     }
 
     .led-card {
-      width: 100%;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 22px;
-      padding: 16px;
+      border-radius: 24px;
+      padding: 18px;
       cursor: pointer;
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      -webkit-touch-callout: none;
-      touch-action: none;
+      transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.25s, border-color 0.25s, opacity 0.25s;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: flex-start;
-      height: 110px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
+      height: 122px;
       position: relative;
       overflow: hidden;
+      touch-action: manipulation;
     }
 
     .led-card * {
       pointer-events: none;
-      -webkit-user-select: none;
-      user-select: none;
-      -webkit-touch-callout: none;
     }
 
-    .led-card:active { transform: scale(0.95); }
+    .led-card.pressing {
+      transform: scale(0.96);
+    }
 
-    /* 2 sn dolan ilerleme çubuğu */
     .led-card::after {
       content: '';
       position: absolute;
-      left: 0; bottom: 0;
-      height: 3px; width: 0;
-      background: rgba(255,255,255,0.7);
+      left: 0;
+      bottom: 0;
+      height: 3px;
+      width: 0;
+      background: rgba(255, 255, 255, 0.75);
       border-radius: 0 3px 3px 0;
     }
+
     .led-card.pressing::after {
       width: 100%;
       transition: width 1s linear;
     }
-    .led-card.pressing { transform: scale(0.96); }
 
-    /* Açık kart: hem online hem on */
     .led-card.on {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: var(--card-border-active);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35), 0 0 20px var(--glow-color);
+      background: var(--card-bg-on);
+      border-color: var(--card-border-on);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
     }
 
-    /* Offline ama son durum "açık" — soluk parlak */
     .led-card.on.offline {
       opacity: 0.55;
-      border-color: rgba(255,255,255,0.12);
+      border-color: rgba(255, 255, 255, 0.08);
       box-shadow: none;
     }
 
-    /* Offline ve kapalı */
-    .led-card.offline { opacity: 0.25; }
-
-    .led-card.loading { opacity: 0.4; pointer-events: none; }
-
-    .offline-badge {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 10px;
-      opacity: 0.6;
-      display: none;
+    .led-card.offline {
+      opacity: 0.38;
     }
-    .led-card.offline .offline-badge { display: block; }
+
+    .led-card.loading {
+      opacity: 0.5;
+      pointer-events: none;
+    }
 
     .led-card-top {
       width: 100%;
@@ -207,24 +191,43 @@
     }
 
     .led-icon {
-      font-size: 24px;
-      transition: transform 0.3s ease;
+      font-size: 26px;
+      line-height: 1;
+      transition: transform 0.25s ease;
     }
-    
-    .led-card.on .led-icon { transform: scale(1.06); }
+
+    .led-card.on .led-icon {
+      transform: scale(1.05);
+    }
+
+    .top-right-indicators {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .offline-badge {
+      font-size: 11px;
+      opacity: 0.75;
+      display: none;
+    }
+
+    .led-card.offline .offline-badge {
+      display: inline-block;
+    }
 
     .led-status-dot {
       width: 6px;
       height: 6px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      margin-top: 6px;
-      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.14);
+      margin-top: 4px;
+      transition: all 0.25s ease;
     }
 
     .led-card.on:not(.offline) .led-status-dot {
       background: #ffffff;
-      box-shadow: 0 0 8px #ffffff;
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.9);
     }
 
     .led-card-bottom {
@@ -234,136 +237,198 @@
     }
 
     .led-name {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
       color: var(--text-muted);
-      letter-spacing: -0.1px;
-      transition: color 0.3s ease;
+      letter-spacing: -0.2px;
+      transition: color 0.25s ease;
     }
-    
-    .led-card.on .led-name { color: var(--on-text); }
+
+    .led-card.on .led-name {
+      color: #ffffff;
+    }
 
     .led-status-text {
-      font-size: 11px;
-      font-weight: 500;
+      font-size: 12px;
+      font-weight: 400;
       color: var(--text-muted);
       margin-top: 3px;
     }
 
-    .led-card.on .led-status-text { color: #ffffff; opacity: 0.85; }
+    .led-card.on .led-status-text {
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    .footer-controls {
+      flex-shrink: 0;
+    }
 
     .all-controls {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 12px;
-      margin-top: 6px;
-      margin-bottom: 6px;
+      gap: 14px;
     }
 
     .all-btn {
-      background: rgba(255, 255, 255, 0.02);
+      background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 18px;
-      color: var(--text);
-      font-size: 12px;
+      border-radius: 20px;
+      color: #ffffff;
+      font-size: 13px;
       font-weight: 500;
-      padding: 14px;
+      padding: 16px 12px;
       cursor: pointer;
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      transition: all 0.3s;
-      -webkit-tap-highlight-color: transparent;
-      letter-spacing: -0.1px;
+      transition: transform 0.2s, background-color 0.2s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      touch-action: manipulation;
     }
 
-    .all-btn:active { transform: scale(0.96); }
+    .all-btn:active {
+      transform: scale(0.96);
+      background: #1d1d22;
+    }
 
     .toast {
       position: fixed;
-      bottom: 35px;
+      bottom: calc(28px + env(safe-area-inset-bottom));
       left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: rgba(20, 20, 25, 0.95);
-      border: 1px solid var(--card-border);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
+      transform: translateX(-50%) translateY(90px);
+      background: #1c1c21;
+      border: 1px solid rgba(255, 255, 255, 0.12);
       border-radius: 99px;
-      color: var(--text);
+      color: #ffffff;
       font-size: 12px;
-      padding: 11px 24px;
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1), opacity 0.3s;
+      font-weight: 500;
+      padding: 11px 22px;
+      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.1), opacity 0.25s;
       opacity: 0;
       z-index: 99;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      white-space: nowrap;
+      pointer-events: none;
     }
 
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
-    .toast.success { color: #ffffff; }
-    .toast.error { border-color: rgba(248,113,113,0.3); color: #f87171; }
+    .toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
 
-    /* ===== Zorla menüsü (bottom sheet) ===== */
+    .toast.error {
+      border-color: rgba(248, 113, 113, 0.35);
+      color: #f87171;
+    }
+
+    /* Zorla menüsü (bottom sheet) */
     .force-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.55);
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.65);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
-      opacity: 0; pointer-events: none;
+      opacity: 0;
+      pointer-events: none;
       transition: opacity 0.25s;
       z-index: 100;
     }
-    .force-overlay.show { opacity: 1; pointer-events: auto; }
+
+    .force-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     .force-sheet {
       position: fixed;
-      left: 50%; bottom: 0;
-      width: 100%; max-width: 420px;
+      left: 50%;
+      bottom: 0;
+      width: 100%;
+      max-width: 430px;
       transform: translate(-50%, 100%);
-      background: rgba(24,24,30,0.98);
-      border: 1px solid var(--card-border);
+      background: #18181c;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
       border-radius: 26px 26px 0 0;
       padding: 22px 20px calc(22px + env(safe-area-inset-bottom));
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
       z-index: 101;
     }
-    .force-overlay.show .force-sheet { transform: translate(-50%, 0); }
 
-    .force-title { font-size: 15px; font-weight: 600; text-align: center; }
-    .force-sub { font-size: 11px; color: var(--text-muted); text-align: center; margin: 4px 0 16px; }
+    .force-overlay.show .force-sheet {
+      transform: translate(-50%, 0);
+    }
+
+    .force-title {
+      font-size: 16px;
+      font-weight: 600;
+      text-align: center;
+    }
+
+    .force-sub {
+      font-size: 12px;
+      color: var(--text-muted);
+      text-align: center;
+      margin: 4px 0 18px;
+    }
 
     .force-btn {
       width: 100%;
       border: 1px solid var(--card-border);
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      font-size: 14px; font-weight: 500;
+      background: #222228;
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 500;
       padding: 15px;
       border-radius: 16px;
       margin-bottom: 10px;
       cursor: pointer;
-      -webkit-tap-highlight-color: transparent;
     }
-    .force-btn:active { transform: scale(0.97); }
-    .force-btn.on  { border-color: rgba(255,255,255,0.3); }
-    .force-btn.off { border-color: rgba(248,113,113,0.35); color: #f87171; }
-    .force-btn.cancel { background: transparent; color: var(--text-muted); margin-bottom: 0; }
+
+    .force-btn:active {
+      transform: scale(0.98);
+    }
+
+    .force-btn.on {
+      border-color: rgba(255, 255, 255, 0.25);
+    }
+
+    .force-btn.off {
+      border-color: rgba(248, 113, 113, 0.3);
+      color: #f87171;
+    }
+
+    .force-btn.cancel {
+      background: transparent;
+      border-color: transparent;
+      color: var(--text-muted);
+      margin-bottom: 0;
+    }
+
+    /* Küçük ekranlı telefonlar için otomatik sıkılaştırma */
+    @media (max-height: 700px) {
+      .live-time { font-size: 42px; }
+      .led-card { height: 104px; padding: 14px; border-radius: 20px; }
+      .grid { gap: 10px; }
+      .all-btn { padding: 13px 10px; }
+    }
   </style>
 </head>
 <body>
 <div class="app">
   <header>
-    <div class="live-time" id="liveTime">--:--</div>
-    <div class="greeting-text" id="greetingText"></div>
-    <div class="live-date" id="liveDate"></div>
-    <div style="font-size:9px;color:#71717a;opacity:.6;margin-top:2px">sürüm: uzun-basma-1sn</div>
+    <div class="live-time" id="liveTime">22:36</div>
+    <div class="greeting-text" id="greetingText">İyi Geceler</div>
+    <div class="live-date" id="liveDate">18 Kasım Çarşamba</div>
+    <div class="version-tag">sürüm: uzun-basma-1sn</div>
   </header>
 
   <div class="main-content">
-    <p class="section-label">Odalar</p>
+    <p class="section-label">ODALAR</p>
     <div class="grid" id="ledGrid"></div>
   </div>
 
-  <div>
-    <p class="section-label">Merkezi Senaryolar</p>
+  <div class="footer-controls">
+    <p class="section-label">MERKEZİ SENARYOLAR</p>
     <div class="all-controls">
       <button class="all-btn" onclick="allLeds('on')">✦ Tümünü Aç</button>
       <button class="all-btn" onclick="allLeds('off')">✕ Tümünü Kapat</button>
@@ -377,18 +442,13 @@
   <div class="force-sheet">
     <div class="force-title" id="forceTitle">Oda</div>
     <div class="force-sub">Mevcut durum yok sayılarak komut gönderilir</div>
-    <button class="force-btn on"  onclick="forceSet('on')">⚡ Zorla Aç</button>
+    <button class="force-btn on" onclick="forceSet('on')">⚡ Zorla Aç</button>
     <button class="force-btn off" onclick="forceSet('off')">⛔ Zorla Kapat</button>
     <button class="force-btn cancel" onclick="closeForceMenu()">İptal</button>
   </div>
 </div>
 
 <script>
-  const icon = document.createElement('link');
-  icon.rel = 'apple-touch-icon';
-  icon.href = 'https://github.com/HamzaEymen61/foto/raw/main/icon-192.png';
-  document.head.appendChild(icon);
-
   const LEDS = [
     { id: 'led1', name: 'Hamza Oda',   host: 'hamza-oda.local',   icon: '🛏️' },
     { id: 'led2', name: 'Salon',       host: 'salon.local',       icon: '🛋️' },
@@ -398,7 +458,6 @@
   ];
 
   const FETCH_TIMEOUT_MS = 3000;
-
   const state = {};
   const networkStatus = {};
 
@@ -453,7 +512,7 @@
   }
 
   const HOLD_MS = 1000;
-  const MOVE_TOLERANCE = 10;
+  const MOVE_TOLERANCE = 14;
 
   let isHolding = false;
   let pendingRender = false;
@@ -477,7 +536,7 @@
 
       const card = document.createElement('div');
       let cls = 'led-card';
-      if (isOn)      cls += ' on';
+      if (isOn) cls += ' on';
       if (isOffline) cls += ' offline';
       card.className = cls;
       card.id = 'card-' + led.id;
@@ -490,10 +549,12 @@
       }
 
       card.innerHTML = `
-        <span class="offline-badge">⚠️</span>
         <div class="led-card-top">
           <span class="led-icon">${led.icon}</span>
-          <div class="led-status-dot"></div>
+          <div class="top-right-indicators">
+            <span class="offline-badge">⚠️</span>
+            <div class="led-status-dot"></div>
+          </div>
         </div>
         <div class="led-card-bottom">
           <div class="led-name">${led.name}</div>
@@ -579,28 +640,39 @@
     if (!led) return;
     closeForceMenu();
 
-    try {
-      await fetchWithTimeout(`http://${led.host}/led1/${action}`, FETCH_TIMEOUT_MS);
-      state[led.id] = (action === 'on');
-      networkStatus[led.id] = true;
-      saveToStorage();
-      renderCards();
-      showToast(`${led.name} zorla ${action === 'on' ? 'açıldı' : 'kapatıldı'}`, 'success');
-    } catch {
-      networkStatus[led.id] = false;
-      renderCards();
-      showToast(`${led.name} — Bağlantı hatası`, 'error');
+    const url = `http://${led.host}/led1/${action}`;
+    const deadline = Date.now() + 5000;
+
+    while (Date.now() < deadline) {
+      const remaining = deadline - Date.now();
+      try {
+        await fetchWithTimeout(url, Math.min(1200, remaining));
+        state[led.id] = (action === 'on');
+        networkStatus[led.id] = true;
+        saveToStorage();
+        renderCards();
+        showToast(`${led.name} zorla ${action === 'on' ? 'açıldı' : 'kapatıldı'}`, 'success');
+        return;
+      } catch {
+        const waitMs = Math.min(250, deadline - Date.now());
+        if (waitMs > 0) await new Promise(resolve => setTimeout(resolve, waitMs));
+      }
     }
+
+    networkStatus[led.id] = false;
+    renderCards();
+    showToast(`${led.name} — 5 saniye denendi, bağlantı kurulamadı`, 'error');
   }
 
   document.getElementById('forceOverlay').addEventListener('click', (e) => {
     if (e.target.id === 'forceOverlay') closeForceMenu();
   });
 
+  // Mobil uyumlu dokunma & uzun basma yönetimi
   const gridEl = document.getElementById('ledGrid');
 
-  gridEl.addEventListener('pointerdown', (e) => {
-    const card = e.target.closest('.led-card');
+  function handleStart(x, y, target) {
+    const card = target.closest('.led-card');
     if (!card) return;
     const led = LEDS.find(l => 'card-' + l.id === card.id);
     if (!led) return;
@@ -609,8 +681,8 @@
     holdFired = false;
     holdCard = card;
     holdLed = led;
-    startX = e.clientX;
-    startY = e.clientY;
+    startX = x;
+    startY = y;
 
     card.classList.add('pressing');
 
@@ -620,31 +692,63 @@
       endHold();
       openForceMenu(led);
     }, HOLD_MS);
-  });
+  }
 
-  gridEl.addEventListener('pointermove', (e) => {
+  function handleMove(x, y) {
     if (!isHolding) return;
-    if (Math.abs(e.clientX - startX) > MOVE_TOLERANCE ||
-        Math.abs(e.clientY - startY) > MOVE_TOLERANCE) {
+    if (Math.abs(x - startX) > MOVE_TOLERANCE || Math.abs(y - startY) > MOVE_TOLERANCE) {
       holdLed = null;
       endHold();
     }
-  });
+  }
 
-  gridEl.addEventListener('pointerup', () => {
+  function handleEnd() {
     if (!isHolding) return;
     const led = holdLed;
     const fired = holdFired;
     endHold();
     if (!fired && led) toggle(led);
+  }
+
+  // Dokunmatik ekranlar (iOS / Android)
+  gridEl.addEventListener('touchstart', (e) => {
+    if (e.touches.length > 1) return;
+    const t = e.touches[0];
+    handleStart(t.clientX, t.clientY, e.target);
+  }, { passive: true });
+
+  gridEl.addEventListener('touchmove', (e) => {
+    const t = e.touches[0];
+    handleMove(t.clientX, t.clientY);
+  }, { passive: true });
+
+  gridEl.addEventListener('touchend', (e) => {
+    if (isHolding) {
+      e.preventDefault();
+      handleEnd();
+    }
   });
 
-  gridEl.addEventListener('pointercancel', () => { holdLed = null; endHold(); });
-  gridEl.addEventListener('pointerleave',  () => { if (isHolding) { holdLed = null; endHold(); } });
+  gridEl.addEventListener('touchcancel', () => {
+    holdLed = null;
+    endHold();
+  });
+
+  // Masaüstü / Fare desteği
+  gridEl.addEventListener('mousedown', (e) => {
+    if (e.button !== 0) return;
+    handleStart(e.clientX, e.clientY, e.target);
+  });
+
+  window.addEventListener('mousemove', (e) => {
+    if (isHolding) handleMove(e.clientX, e.clientY);
+  });
+
+  window.addEventListener('mouseup', () => {
+    if (isHolding) handleEnd();
+  });
 
   gridEl.addEventListener('contextmenu', (e) => e.preventDefault());
-  gridEl.addEventListener('selectstart', (e) => e.preventDefault());
-  gridEl.addEventListener('touchstart', (e) => e.preventDefault(), { passive: false });
 
   let toastTimer;
   function showToast(msg, type = '') {
@@ -664,7 +768,6 @@
 
   renderCards();
   checkAllStatuses();
-
   setInterval(checkAllStatuses, 5000);
 
   document.addEventListener('visibilitychange', () => {
@@ -674,10 +777,7 @@
     }
   });
 
-  window.addEventListener('focus', () => {
-    checkAllStatuses();
-  });
-
+  window.addEventListener('focus', () => checkAllStatuses());
   window.addEventListener('pageshow', (e) => {
     if (e.persisted) {
       updateClockAndUI();
