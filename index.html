@@ -1,21 +1,15 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <meta name="theme-color" content="#0a0a0c">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Akıllı Ev">
-  <link rel="apple-touch-icon" href="https://github.com/HamzaEymen61/foto/raw/main/icon-192.png">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0a0a0c" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Akıllı Ev" />
   <title>Akıllı Ev</title>
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-    }
+    <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
       --bg-gradient: radial-gradient(circle at 50% 0%, #1a1a24 0%, #0a0a0c 70%);
@@ -24,7 +18,7 @@
       --card-border-active: rgba(255, 255, 255, 0.25);
       --text: #ffffff;
       --text-muted: #71717a;
-      --glow-color: rgba(255, 255, 255, 0.15);
+      --glow-color: rgba(255, 255, 255, 0.15); 
       --on-text: #ffffff;
     }
 
@@ -35,128 +29,118 @@
       background-image: var(--bg-gradient);
       color: var(--text);
       font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
-      overscroll-behavior: none;
       overflow: hidden;
+      overscroll-behavior: none;
     }
 
     body {
       height: 100dvh;
       display: flex;
       justify-content: center;
-      align-items: stretch;
-      padding-top: max(12px, env(safe-area-inset-top));
-      padding-bottom: max(16px, env(safe-area-inset-bottom));
-      padding-left: env(safe-area-inset-left);
-      padding-right: env(safe-area-inset-right);
+      align-items: center;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
     .app {
       width: 100%;
-      max-width: 480px;
+      max-width: 420px;
       height: 100%;
-      padding: 12px 20px 10px;
+      padding: 24px 20px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      align-items: stretch;
-      gap: 12px;
     }
 
-    /* Üst Saat & Karşılama Alanı */
-    header {
-      width: 100%;
+    header { 
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      padding-top: 6px;
-      flex-shrink: 0;
+      margin-top: 10px;
+      margin-bottom: 5px;
+      min-height: 85px;
     }
 
     .live-time {
-      font-size: clamp(38px, 11vw, 48px);
+      font-size: 46px;
       font-weight: 200;
-      letter-spacing: -1.5px;
+      letter-spacing: -1.2px;
       color: #ffffff;
-      line-height: 1;
-      font-variant-numeric: tabular-nums;
+      line-height: 0.95;
     }
 
     .greeting-text {
-      font-size: 14px;
+      font-size: 13px;
       font-weight: 500;
       color: #ffffff;
       margin-top: 6px;
       letter-spacing: -0.1px;
       opacity: 0.85;
+      min-height: 16px;
     }
 
     .live-date {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 400;
       color: var(--text-muted);
-      margin-top: 3px;
+      margin-top: 4px;
       letter-spacing: 0.01em;
       text-transform: capitalize;
+      min-height: 14px;
     }
 
     .section-label {
-      width: 100%;
-      font-size: 11px;
+      font-size: 10px;
       font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
       color: var(--text-muted);
       margin-bottom: 10px;
-      padding-left: 4px;
-      opacity: 0.75;
+      margin-top: 6px;
+      opacity: 0.7;
     }
 
-    /* Orta Alan - Tam Genişlik */
     .main-content {
-      width: 100%;
-      flex: 1;
+      flex-grow: 1;
       display: flex;
       flex-direction: column;
       justify-content: center;
-      min-height: 0;
     }
 
     .grid {
-      width: 100%;
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      width: 100%;
     }
 
-    /* 5. kartın (tek kalan son kart) tam genişlikte oturması için */
+    /* 5. kart tek kaldığında diğerleriyle aynı boyutta olup tam ortada durur */
     .grid .led-card:nth-child(odd):last-child {
       grid-column: 1 / -1;
+      justify-self: center;
+      width: calc(50% - 6px);
     }
 
     .led-card {
       width: 100%;
       background: var(--card-bg);
       border: 1px solid var(--card-border);
-      border-radius: 24px;
+      border-radius: 22px;
       padding: 16px;
       cursor: pointer;
       backdrop-filter: blur(25px);
       -webkit-backdrop-filter: blur(25px);
-      transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
-                  background 0.35s ease,
-                  border-color 0.35s ease,
-                  box-shadow 0.35s ease,
-                  opacity 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
       user-select: none;
       -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
       -webkit-touch-callout: none;
       touch-action: none;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: flex-start;
-      height: clamp(104px, 15dvh, 124px);
+      height: 110px;
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
       position: relative;
       overflow: hidden;
@@ -169,90 +153,72 @@
       -webkit-touch-callout: none;
     }
 
-    .led-card:active {
-      transform: scale(0.96);
-    }
+    .led-card:active { transform: scale(0.95); }
 
-    /* Uzun basma ilerleme çubuğu */
+    /* 2 sn dolan ilerleme çubuğu */
     .led-card::after {
       content: '';
       position: absolute;
-      left: 0;
-      bottom: 0;
-      height: 3.5px;
-      width: 0;
-      background: rgba(255, 255, 255, 0.75);
+      left: 0; bottom: 0;
+      height: 3px; width: 0;
+      background: rgba(255,255,255,0.7);
       border-radius: 0 3px 3px 0;
     }
-
     .led-card.pressing::after {
       width: 100%;
       transition: width 1s linear;
     }
+    .led-card.pressing { transform: scale(0.96); }
 
-    .led-card.pressing {
-      transform: scale(0.96);
-    }
-
+    /* Açık kart: hem online hem on */
     .led-card.on {
-      background: rgba(255, 255, 255, 0.065);
+      background: rgba(255, 255, 255, 0.06);
       border-color: var(--card-border-active);
       box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35), 0 0 20px var(--glow-color);
     }
 
+    /* Offline ama son durum "açık" — soluk parlak */
     .led-card.on.offline {
       opacity: 0.55;
-      border-color: rgba(255, 255, 255, 0.12);
+      border-color: rgba(255,255,255,0.12);
       box-shadow: none;
     }
 
-    .led-card.offline {
-      opacity: 0.28;
-    }
+    /* Offline ve kapalı */
+    .led-card.offline { opacity: 0.25; }
 
-    .led-card.loading {
-      opacity: 0.45;
-      pointer-events: none;
+    .led-card.loading { opacity: 0.4; pointer-events: none; }
+
+    .offline-badge {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 10px;
+      opacity: 0.6;
+      display: none;
     }
+    .led-card.offline .offline-badge { display: block; }
 
     .led-card-top {
       width: 100%;
       display: flex;
       justify-content: space-between;
-      align-items: center;
+      align-items: flex-start;
     }
 
     .led-icon {
-      font-size: 26px;
-      line-height: 1;
+      font-size: 24px;
       transition: transform 0.3s ease;
     }
-
-    .led-card.on .led-icon {
-      transform: scale(1.06);
-    }
-
-    .led-top-right {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .offline-badge {
-      font-size: 11px;
-      opacity: 0.75;
-      display: none;
-    }
-
-    .led-card.offline .offline-badge {
-      display: inline-block;
-    }
+    
+    .led-card.on .led-icon { transform: scale(1.06); }
 
     .led-status-dot {
-      width: 7px;
-      height: 7px;
+      width: 6px;
+      height: 6px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.12);
+      background: rgba(255, 255, 255, 0.1);
+      margin-top: 6px;
       transition: all 0.3s ease;
     }
 
@@ -265,204 +231,130 @@
       display: flex;
       flex-direction: column;
       align-items: flex-start;
-      width: 100%;
     }
 
     .led-name {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       color: var(--text-muted);
-      letter-spacing: -0.2px;
+      letter-spacing: -0.1px;
       transition: color 0.3s ease;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      max-width: 100%;
     }
-
-    .led-card.on .led-name {
-      color: var(--on-text);
-    }
+    
+    .led-card.on .led-name { color: var(--on-text); }
 
     .led-status-text {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 500;
       color: var(--text-muted);
-      margin-top: 2px;
+      margin-top: 3px;
     }
 
-    .led-card.on .led-status-text {
-      color: #ffffff;
-      opacity: 0.85;
-    }
-
-    /* Alt Merkezi Senaryolar - Tam Genişlik */
-    .bottom-section {
-      width: 100%;
-      flex-shrink: 0;
-      padding-top: 4px;
-    }
+    .led-card.on .led-status-text { color: #ffffff; opacity: 0.85; }
 
     .all-controls {
-      width: 100%;
       display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 14px;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 6px;
+      margin-bottom: 6px;
     }
 
     .all-btn {
-      width: 100%;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.02);
       border: 1px solid var(--card-border);
-      border-radius: 20px;
+      border-radius: 18px;
       color: var(--text);
-      font-size: 13px;
+      font-size: 12px;
       font-weight: 500;
-      min-height: 52px;
-      padding: 14px 12px;
+      padding: 14px;
       cursor: pointer;
       backdrop-filter: blur(15px);
       -webkit-backdrop-filter: blur(15px);
-      transition: transform 0.2s ease, background 0.25s ease, border-color 0.25s ease;
+      transition: all 0.3s;
+      -webkit-tap-highlight-color: transparent;
       letter-spacing: -0.1px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
     }
 
-    .all-btn:active {
-      transform: scale(0.96);
-      background: rgba(255, 255, 255, 0.07);
-    }
+    .all-btn:active { transform: scale(0.96); }
 
-    /* Toast Bildirim */
     .toast {
       position: fixed;
-      bottom: calc(92px + env(safe-area-inset-bottom));
+      bottom: 35px;
       left: 50%;
-      transform: translateX(-50%) translateY(20px);
-      background: rgba(22, 22, 28, 0.96);
+      transform: translateX(-50%) translateY(80px);
+      background: rgba(20, 20, 25, 0.95);
       border: 1px solid var(--card-border);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-radius: 99px;
       color: var(--text);
-      font-size: 13px;
-      font-weight: 500;
-      padding: 11px 22px;
-      white-space: nowrap;
-      max-width: 90vw;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.1), opacity 0.25s;
+      font-size: 12px;
+      padding: 11px 24px;
+      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1), opacity 0.3s;
       opacity: 0;
-      pointer-events: none;
       z-index: 99;
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
     }
 
-    .toast.show {
-      transform: translateX(-50%) translateY(0);
-      opacity: 1;
-    }
-
+    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
     .toast.success { color: #ffffff; }
-    .toast.error { border-color: rgba(248, 113, 113, 0.35); color: #f87171; }
+    .toast.error { border-color: rgba(248,113,113,0.3); color: #f87171; }
 
-    /* Zorla Menüsü (Bottom Sheet) */
+    /* ===== Zorla menüsü (bottom sheet) ===== */
     .force-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.6);
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.55);
       backdrop-filter: blur(6px);
       -webkit-backdrop-filter: blur(6px);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
+      opacity: 0; pointer-events: none;
+      transition: opacity 0.25s;
       z-index: 100;
     }
-
-    .force-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
+    .force-overlay.show { opacity: 1; pointer-events: auto; }
 
     .force-sheet {
       position: fixed;
-      left: 50%;
-      bottom: 0;
-      width: 100%;
-      max-width: 480px;
+      left: 50%; bottom: 0;
+      width: 100%; max-width: 420px;
       transform: translate(-50%, 100%);
-      background: rgba(22, 22, 28, 0.98);
-      border-top: 1px solid var(--card-border);
-      border-left: 1px solid var(--card-border);
-      border-right: 1px solid var(--card-border);
-      border-radius: 28px 28px 0 0;
-      padding: 12px 20px calc(20px + env(safe-area-inset-bottom));
+      background: rgba(24,24,30,0.98);
+      border: 1px solid var(--card-border);
+      border-radius: 26px 26px 0 0;
+      padding: 22px 20px calc(22px + env(safe-area-inset-bottom));
       transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
       z-index: 101;
     }
+    .force-overlay.show .force-sheet { transform: translate(-50%, 0); }
 
-    .force-overlay.show .force-sheet {
-      transform: translate(-50%, 0);
-    }
-
-    .sheet-handle {
-      width: 36px;
-      height: 4px;
-      border-radius: 99px;
-      background: rgba(255, 255, 255, 0.18);
-      margin: 0 auto 14px;
-    }
-
-    .force-title {
-      font-size: 16px;
-      font-weight: 600;
-      text-align: center;
-    }
-
-    .force-sub {
-      font-size: 12px;
-      color: var(--text-muted);
-      text-align: center;
-      margin: 4px 0 18px;
-    }
+    .force-title { font-size: 15px; font-weight: 600; text-align: center; }
+    .force-sub { font-size: 11px; color: var(--text-muted); text-align: center; margin: 4px 0 16px; }
 
     .force-btn {
       width: 100%;
-      min-height: 52px;
       border: 1px solid var(--card-border);
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255,255,255,0.05);
       color: var(--text);
-      font-size: 15px;
-      font-weight: 500;
-      padding: 14px;
-      border-radius: 18px;
+      font-size: 14px; font-weight: 500;
+      padding: 15px;
+      border-radius: 16px;
       margin-bottom: 10px;
       cursor: pointer;
-      transition: transform 0.2s ease, background 0.2s ease;
+      -webkit-tap-highlight-color: transparent;
     }
-
     .force-btn:active { transform: scale(0.97); }
-    .force-btn.on { border-color: rgba(255, 255, 255, 0.28); }
-    .force-btn.off { border-color: rgba(248, 113, 113, 0.35); color: #f87171; }
-    .force-btn.cancel {
-      background: transparent;
-      border-color: transparent;
-      color: var(--text-muted);
-      margin-bottom: 0;
-      margin-top: 2px;
-    }
+    .force-btn.on  { border-color: rgba(255,255,255,0.3); }
+    .force-btn.off { border-color: rgba(248,113,113,0.35); color: #f87171; }
+    .force-btn.cancel { background: transparent; color: var(--text-muted); margin-bottom: 0; }
   </style>
 </head>
 <body>
 <div class="app">
   <header>
-    <div class="live-time" id="liveTime">21:52</div>
-    <div class="greeting-text" id="greetingText">İyi Akşamlar</div>
-    <div class="live-date" id="liveDate">18 Kasım Çarşamba</div>
+    <div class="live-time" id="liveTime">--:--</div>
+    <div class="greeting-text" id="greetingText"></div>
+    <div class="live-date" id="liveDate"></div>
+    <div style="font-size:9px;color:#71717a;opacity:.6;margin-top:2px">sürüm: uzun-basma-1sn</div>
   </header>
 
   <div class="main-content">
@@ -470,7 +362,7 @@
     <div class="grid" id="ledGrid"></div>
   </div>
 
-  <div class="bottom-section">
+  <div>
     <p class="section-label">Merkezi Senaryolar</p>
     <div class="all-controls">
       <button class="all-btn" onclick="allLeds('on')">✦ Tümünü Aç</button>
@@ -483,16 +375,20 @@
 
 <div class="force-overlay" id="forceOverlay">
   <div class="force-sheet">
-    <div class="sheet-handle"></div>
     <div class="force-title" id="forceTitle">Oda</div>
     <div class="force-sub">Mevcut durum yok sayılarak komut gönderilir</div>
-    <button class="force-btn on" onclick="forceSet('on')">⚡ Zorla Aç</button>
+    <button class="force-btn on"  onclick="forceSet('on')">⚡ Zorla Aç</button>
     <button class="force-btn off" onclick="forceSet('off')">⛔ Zorla Kapat</button>
     <button class="force-btn cancel" onclick="closeForceMenu()">İptal</button>
   </div>
 </div>
 
 <script>
+  const icon = document.createElement('link');
+  icon.rel = 'apple-touch-icon';
+  icon.href = 'https://github.com/HamzaEymen61/foto/raw/main/icon-192.png';
+  document.head.appendChild(icon);
+
   const LEDS = [
     { id: 'led1', name: 'Hamza Oda',   host: 'hamza-oda.local',   icon: '🛏️' },
     { id: 'led2', name: 'Salon',       host: 'salon.local',       icon: '🛋️' },
@@ -557,7 +453,7 @@
   }
 
   const HOLD_MS = 1000;
-  const MOVE_TOLERANCE = 12;
+  const MOVE_TOLERANCE = 10;
 
   let isHolding = false;
   let pendingRender = false;
@@ -581,7 +477,7 @@
 
       const card = document.createElement('div');
       let cls = 'led-card';
-      if (isOn) cls += ' on';
+      if (isOn)      cls += ' on';
       if (isOffline) cls += ' offline';
       card.className = cls;
       card.id = 'card-' + led.id;
@@ -594,12 +490,10 @@
       }
 
       card.innerHTML = `
+        <span class="offline-badge">⚠️</span>
         <div class="led-card-top">
           <span class="led-icon">${led.icon}</span>
-          <div class="led-top-right">
-            <span class="offline-badge">⚠️</span>
-            <div class="led-status-dot"></div>
-          </div>
+          <div class="led-status-dot"></div>
         </div>
         <div class="led-card-bottom">
           <div class="led-name">${led.name}</div>
@@ -685,28 +579,18 @@
     if (!led) return;
     closeForceMenu();
 
-    const url = `http://${led.host}/led1/${action}`;
-    const deadline = Date.now() + 5000;
-
-    while (Date.now() < deadline) {
-      const remaining = deadline - Date.now();
-      try {
-        await fetchWithTimeout(url, Math.min(1200, remaining));
-        state[led.id] = (action === 'on');
-        networkStatus[led.id] = true;
-        saveToStorage();
-        renderCards();
-        showToast(`${led.name} zorla ${action === 'on' ? 'açıldı' : 'kapatıldı'}`, 'success');
-        return;
-      } catch (err) {
-        const waitMs = Math.min(250, deadline - Date.now());
-        if (waitMs > 0) await new Promise(resolve => setTimeout(resolve, waitMs));
-      }
+    try {
+      await fetchWithTimeout(`http://${led.host}/led1/${action}`, FETCH_TIMEOUT_MS);
+      state[led.id] = (action === 'on');
+      networkStatus[led.id] = true;
+      saveToStorage();
+      renderCards();
+      showToast(`${led.name} zorla ${action === 'on' ? 'açıldı' : 'kapatıldı'}`, 'success');
+    } catch {
+      networkStatus[led.id] = false;
+      renderCards();
+      showToast(`${led.name} — Bağlantı hatası`, 'error');
     }
-
-    networkStatus[led.id] = false;
-    renderCards();
-    showToast(`${led.name} — 5 sn denendi, ulaşılamadı`, 'error');
   }
 
   document.getElementById('forceOverlay').addEventListener('click', (e) => {
