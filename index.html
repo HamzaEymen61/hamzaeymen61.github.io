@@ -1382,7 +1382,24 @@ header {
   position: relative;
   z-index: 2;
 }
+/* GECİKMELİ TAM KART DOLUMU */
 
+.led-card::after {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: none !important;
+}
+
+.led-card.pressing::after {
+  transform: scaleX(1);
+  transition: transform .76s linear !important;
+}
+
+/* Parmağı erken çekince dolum anında sıfırlansın */
+.led-card:not(.pressing)::after {
+  transform: scaleX(0);
+  transition: none !important;
+}
 </style>
 
 
@@ -1445,7 +1462,7 @@ header {
     { id: 'led5', name: 'Yatak Odası', host: 'yatak-odasi.local', icon: '🌙' },
   ];
 
-  const FETCH_TIMEOUT_MS = 3000;
+  const FETCH_TIMEOUT_MS = 1800;
   const state = {};
   const networkStatus = {};
   const lastRenderedState = {};
@@ -1501,6 +1518,7 @@ header {
   }
 
   const HOLD_MS = 1000;
+  const HOLD_FEEDBACK_DELAY_MS = 220;
   const MOVE_TOLERANCE = 14;
 
   let isHolding = false;
@@ -1511,6 +1529,7 @@ header {
   let holdLed = null;
   let startX = 0, startY = 0;
   let forceTarget = null;
+  let holdProgressTimer = null;
 
   function renderCards() {
     if (isHolding) { pendingRender = true; return; }
@@ -1582,7 +1601,12 @@ lastRenderedState[led.id] = isOn;
       }
     }));
     saveToStorage();
-    renderCards();
+
+if (!isHolding) {
+  renderCards();
+} else {
+  pendingRender = true;
+}
   }
 
   async function toggle(led) {
@@ -1621,13 +1645,21 @@ lastRenderedState[led.id] = isOn;
   }
 
   function endHold() {
-    clearTimeout(holdTimer);
-    holdTimer = null;
-    if (holdCard) holdCard.classList.remove('pressing');
-    holdCard = null;
-    isHolding = false;
-    if (pendingRender) renderCards();
+  clearTimeout(holdTimer);
+  clearTimeout(holdProgressTimer);
+
+  holdTimer = null;
+  holdProgressTimer = null;
+
+  if (holdCard) {
+    holdCard.classList.remove('pressing');
   }
+
+  holdCard = null;
+  isHolding = false;
+
+  if (pendingRender) renderCards();
+}
 
   function openForceMenu(led) {
     forceTarget = led;
@@ -1688,7 +1720,12 @@ lastRenderedState[led.id] = isOn;
     startX = x;
     startY = y;
 
+    holdProgressTimer = setTimeout(() => {
+  if (isHolding && holdCard === card) {
     card.classList.add('pressing');
+    holdProgressTimer = null;
+  }
+}, HOLD_FEEDBACK_DELAY_MS);
 
     holdTimer = setTimeout(() => {
       holdFired = true;
@@ -1770,7 +1807,7 @@ lastRenderedState[led.id] = isOn;
 
   renderCards();
   checkAllStatuses();
-  setInterval(checkAllStatuses, 5000);
+  setInterval(checkAllStatuses, 15000);
 
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible') {
