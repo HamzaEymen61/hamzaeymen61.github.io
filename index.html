@@ -1082,61 +1082,132 @@ header {
   box-shadow: 0 20px 50px rgba(0,0,0,.6);
 }
 
+
 /* =========================================
-   YENİ AÇMA / KAPATMA ANİMASYONLARI
+   CINEMATIC POWER TRANSITIONS
+   Premium Black Edition
    ========================================= */
 
-/* Açılırken yumuşak geçiş */
+/* Kartın açılması */
 .led-card.just-turned-on {
-  animation: stealthOn .58s cubic-bezier(.2,.75,.25,1) both;
+  animation: cinematicPowerOn .78s cubic-bezier(.2,.8,.2,1);
 }
 
-/* Kapanırken sakin geçiş */
+/* Kartın kapanması */
 .led-card.just-turned-off {
-  animation: stealthOff .48s ease-out both;
+  animation: cinematicPowerOff .65s cubic-bezier(.4,0,.2,1);
 }
 
-@keyframes stealthOn {
+/* Açılma: hafif yükselme ve oturma */
+@keyframes cinematicPowerOn {
   0% {
-    transform: scale(.985);
-    filter: brightness(.93);
+    transform: translateY(3px) scale(.975);
+    filter: brightness(.85);
+    box-shadow: 0 5px 15px rgba(0,0,0,.25);
   }
 
-  45% {
-    transform: scale(1.008);
-    filter: brightness(1.045);
+  40% {
+    transform: translateY(-2px) scale(1.012);
+    filter: brightness(1.07);
+    box-shadow:
+      0 12px 28px rgba(0,0,0,.35),
+      0 0 17px rgba(255,255,255,.075);
+  }
+
+  75% {
+    transform: translateY(0) scale(.998);
+    filter: brightness(1.02);
   }
 
   100% {
-    transform: scale(1);
+    transform: translateY(0) scale(1);
     filter: brightness(1);
+    box-shadow:
+      0 9px 22px rgba(0,0,0,.34),
+      inset 0 1px 0 rgba(255,255,255,.09);
   }
 }
 
-@keyframes stealthOff {
+/* Kapanma: kontrollü biçimde sönme */
+@keyframes cinematicPowerOff {
   0% {
-    transform: scale(1.006);
-    filter: brightness(1.035);
-  }
-
-  100% {
-    transform: scale(1);
-    filter: brightness(1);
-  }
-}
-
-/* İkonun küçük hareketi */
-.led-card.just-turned-on .icon-bubble {
-  animation: capsuleOn .48s ease-out;
-}
-
-@keyframes capsuleOn {
-  0% {
-    transform: scale(.96);
+    transform: translateY(-1px) scale(1.008);
+    filter: brightness(1.08);
+    box-shadow: 0 0 17px rgba(255,255,255,.07);
   }
 
   55% {
-    transform: scale(1.055);
+    transform: translateY(1px) scale(.992);
+    filter: brightness(.92);
+  }
+
+  100% {
+    transform: translateY(0) scale(1);
+    filter: brightness(1);
+    box-shadow:
+      0 8px 20px rgba(0,0,0,.32),
+      inset 0 1px 0 rgba(255,255,255,.045);
+  }
+}
+
+/* =========================================
+   GLASS LIGHT SWEEP
+   Kartın içinden geçen ince ışık
+   ========================================= */
+
+.led-card.just-turned-on::before {
+  background: linear-gradient(
+    112deg,
+    transparent 15%,
+    rgba(255,255,255,.025) 35%,
+    rgba(255,255,255,.15) 50%,
+    rgba(255,255,255,.025) 65%,
+    transparent 85%
+  );
+
+  background-size: 240% 100%;
+  background-position: 120% 0;
+  opacity: 0;
+
+  animation: glassLightSweep .85s ease-out forwards;
+}
+
+@keyframes glassLightSweep {
+  0% {
+    background-position: 120% 0;
+    opacity: 0;
+  }
+
+  35% {
+    opacity: .8;
+  }
+
+  100% {
+    background-position: -120% 0;
+    opacity: 0;
+  }
+}
+
+/* =========================================
+   ICON SPRING
+   İkonun hafifçe canlanması
+   ========================================= */
+
+.led-card.just-turned-on .icon-bubble {
+  animation: iconSpring .62s cubic-bezier(.2,.8,.2,1);
+}
+
+@keyframes iconSpring {
+  0% {
+    transform: scale(.91);
+  }
+
+  45% {
+    transform: scale(1.09);
+  }
+
+  72% {
+    transform: scale(.975);
   }
 
   100% {
@@ -1144,22 +1215,97 @@ header {
   }
 }
 
-/* Durum noktasında çok hafif nabız */
-.led-card.just-turned-on .led-status-dot {
-  animation: dotOn .55s ease-out;
+/* İkonun çevresinde kısa halka efekti */
+
+.led-card.just-turned-on .icon-bubble {
+  position: relative;
 }
 
-@keyframes dotOn {
+.led-card.just-turned-on .icon-bubble::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+
+  border-radius: 17px;
+  border: 1px solid rgba(255,255,255,.22);
+
+  animation: iconRing .7s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes iconRing {
   0% {
-    box-shadow: 0 0 0 0 rgba(255,255,255,0);
+    transform: scale(.85);
+    opacity: 0;
   }
 
-  50% {
-    box-shadow: 0 0 0 4px rgba(255,255,255,.07);
+  35% {
+    opacity: .65;
   }
 
   100% {
+    transform: scale(1.16);
+    opacity: 0;
+  }
+}
+
+/* =========================================
+   STATUS LIGHT
+   Sağ üstteki gösterge
+   ========================================= */
+
+.led-card.just-turned-on .led-status-dot {
+  animation: statusWake .7s ease-out;
+}
+
+@keyframes statusWake {
+  0% {
+    transform: scale(.7);
+    box-shadow: 0 0 0 rgba(255,255,255,0);
+  }
+
+  45% {
+    transform: scale(1.35);
+    box-shadow: 0 0 7px rgba(255,255,255,.25);
+  }
+
+  100% {
+    transform: scale(1);
     box-shadow: 0 0 4px rgba(255,255,255,.28);
+  }
+}
+
+/* Kapanırken kapsül yumuşakça küçülsün */
+.led-card.just-turned-off .icon-bubble {
+  animation: iconSleep .48s ease-out;
+}
+
+@keyframes iconSleep {
+  0% {
+    transform: scale(1);
+  }
+
+  55% {
+    transform: scale(.94);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Kapanırken ışık geri çekilsin */
+.led-card.just-turned-off::before {
+  animation: glassFadeOut .55s ease-out forwards;
+}
+
+@keyframes glassFadeOut {
+  0% {
+    opacity: .9;
+  }
+
+  100% {
+    opacity: 0;
   }
 }
 
@@ -1167,10 +1313,74 @@ header {
 @media (prefers-reduced-motion: reduce) {
   .led-card.just-turned-on,
   .led-card.just-turned-off,
+  .led-card.just-turned-on::before,
+  .led-card.just-turned-off::before,
   .led-card.just-turned-on .icon-bubble,
+  .led-card.just-turned-off .icon-bubble,
+  .led-card.just-turned-on .icon-bubble::after,
   .led-card.just-turned-on .led-status-dot {
     animation: none !important;
   }
+}
+
+
+/* TAM KART DOLUM ANİMASYONU */
+
+.led-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+}
+
+/* Tüm kartı kaplayan dolum */
+.led-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+
+  width: 100%;
+  height: 100%;
+
+  border-radius: inherit;
+
+  transform: scaleX(0);
+  transform-origin: left center;
+
+  z-index: 0;
+  pointer-events: none;
+
+  transition: none;
+  box-shadow: none;
+}
+
+/* Kapalı oda: açık renk dolum */
+.led-card:not(.on)::after {
+  background: rgba(235,235,235,.22);
+}
+
+/* Açık oda: koyu renk dolum */
+.led-card.on::after {
+  background: rgba(0,0,0,.48);
+}
+
+/* Basılı tutulduğunda kartın tamamı dolar */
+.led-card.pressing::after {
+  transform: scaleX(1);
+  transition: transform .95s linear;
+}
+
+/* Kart yazıları ve ikonları dolumun üzerinde kalır */
+.led-card-top,
+.led-card-bottom {
+  position: relative;
+  z-index: 2;
+}
+
+/* İçerik görünürlüğü */
+.led-card .icon-bubble,
+.led-card .top-right-indicators {
+  position: relative;
+  z-index: 2;
 }
 
 </style>
@@ -1436,7 +1646,7 @@ lastRenderedState[led.id] = isOn;
     closeForceMenu();
 
     const url = `http://${led.host}/led1/${action}`;
-    const deadline = Date.now() + 5000;
+    const deadline = Date.now() + 10000;
 
     while (Date.now() < deadline) {
       const remaining = deadline - Date.now();
@@ -1456,7 +1666,7 @@ lastRenderedState[led.id] = isOn;
 
     networkStatus[led.id] = false;
     renderCards();
-    showToast(`${led.name} — 5 sn denendi, ulaşılamadı`, 'error');
+    showToast(`${led.name} — 10 sn denendi, ulaşılamadı`, 'error');
   }
 
   document.getElementById('forceOverlay').addEventListener('click', (e) => {
