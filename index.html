@@ -9,600 +9,1173 @@
   <meta name="apple-mobile-web-app-title" content="Akıllı Ev">
   <title>Akıllı Ev</title>
   <link rel="apple-touch-icon" href="https://github.com/HamzaEymen61/foto/raw/main/icon-192.png">
-  <style>
-    *, *::before, *::after {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      -webkit-tap-highlight-color: transparent;
-      -webkit-touch-callout: none;
-    }
-
-    :root {
-      --bg-base: #07070a;
-      --glass-surface: rgba(255, 255, 255, 0.045);
-      --glass-surface-active: rgba(255, 255, 255, 0.11);
-      --glass-border: rgba(255, 255, 255, 0.09);
-      --glass-border-highlight: rgba(255, 255, 255, 0.28);
-      --glass-border-active: rgba(255, 255, 255, 0.35);
-      --text-primary: #ffffff;
-      --text-secondary: rgba(235, 235, 245, 0.6);
-      --text-tertiary: rgba(235, 235, 245, 0.35);
-      --warm-glow: rgba(255, 214, 138, 0.22);
-    }
-
-    html, body {
-      height: 100%;
-      background-color: var(--bg-base);
-      color: var(--text-primary);
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
-      overflow: hidden;
-      user-select: none;
-      -webkit-user-select: none;
-    }
-
-    body {
-      display: flex;
-      justify-content: center;
-      position: relative;
-      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
-    }
-
-    /* Arka Plan Ambiyans Işıkları (Liquid Glass derinliği için) */
-    .ambient-bg {
-      position: fixed;
-      inset: 0;
-      overflow: hidden;
-      z-index: 0;
-      pointer-events: none;
-      background: radial-gradient(circle at 50% 0%, #141622 0%, #07070a 75%);
-    }
-
-    .orb {
-      position: absolute;
-      border-radius: 50%;
-      filter: blur(75px);
-      opacity: 0.55;
-      animation: floatOrb 18s ease-in-out infinite alternate;
-    }
-
-    .orb-1 {
-      width: 280px;
-      height: 280px;
-      background: radial-gradient(circle, rgba(88, 124, 255, 0.26), transparent 70%);
-      top: -60px;
-      left: -40px;
-    }
-
-    .orb-2 {
-      width: 300px;
-      height: 300px;
-      background: radial-gradient(circle, rgba(168, 110, 255, 0.18), transparent 70%);
-      bottom: 8%;
-      right: -70px;
-      animation-delay: -6s;
-    }
-
-    .orb-3 {
-      width: 240px;
-      height: 240px;
-      background: radial-gradient(circle, rgba(255, 195, 113, 0.12), transparent 70%);
-      top: 42%;
-      left: 20%;
-      animation-delay: -12s;
-    }
-
-    @keyframes floatOrb {
-      0% { transform: translate(0, 0) scale(1); }
-      100% { transform: translate(22px, -28px) scale(1.08); }
-    }
-
-    .app {
-      position: relative;
-      z-index: 1;
-      width: 100%;
-      max-width: 430px;
-      height: 100dvh;
-      padding: 18px 22px 24px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    /* Üst Saat ve Selamlama Alanı */
-    header {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding-top: 10px;
-      flex-shrink: 0;
-    }
-
-    .live-time {
-      font-size: 56px;
-      font-weight: 200;
-      letter-spacing: -2px;
-      line-height: 0.98;
-      background: linear-gradient(180deg, #ffffff 35%, rgba(255, 255, 255, 0.68) 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      font-variant-numeric: tabular-nums;
-    }
-
-    .greeting-pill {
-      margin-top: 10px;
-      padding: 5px 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .greeting-text {
-      font-size: 13px;
-      font-weight: 500;
-      color: #ffffff;
-      letter-spacing: -0.1px;
-    }
-
-    .live-date {
-      font-size: 12px;
-      font-weight: 400;
-      color: var(--text-secondary);
-      margin-top: 7px;
-      text-transform: capitalize;
-    }
-
-    /* Ana Oda Kartları Alanı */
-    .main-content {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      min-height: 0;
-      margin: 10px 0;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 12px;
-      padding: 0 4px;
-    }
-
-    .section-label {
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: 0.09em;
-      text-transform: uppercase;
-      color: var(--text-tertiary);
-    }
-
-    .active-count {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-secondary);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    /* Liquid Glass Kart Tasarımı */
-    .led-card {
-      position: relative;
-      height: 124px;
-      border-radius: 26px;
-      padding: 18px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      align-items: flex-start;
-      overflow: hidden;
-      touch-action: manipulation;
-
-      background: linear-gradient(
-        145deg,
-        rgba(255, 255, 255, 0.07) 0%,
-        rgba(255, 255, 255, 0.025) 100%
-      );
-      backdrop-filter: blur(32px) saturate(180%);
-      -webkit-backdrop-filter: blur(32px) saturate(180%);
-      border: 1px solid var(--glass-border);
-      border-top-color: rgba(255, 255, 255, 0.22);
-      box-shadow:
-        0 10px 30px rgba(0, 0, 0, 0.35),
-        inset 0 1px 1px rgba(255, 255, 255, 0.16);
-      transition:
-        transform 0.25s cubic-bezier(0.22, 1, 0.36, 1),
-        background 0.35s ease,
-        border-color 0.35s ease,
-        box-shadow 0.35s ease,
-        opacity 0.3s ease;
-    }
-
-    /* Cam üstü sıvı ışık parlaması */
-    .led-card::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(
-        circle at 20% 0%,
-        rgba(255, 255, 255, 0.14) 0%,
-        transparent 60%
-      );
-      opacity: 0.6;
-      pointer-events: none;
-      transition: opacity 0.35s ease;
-    }
-
-    /* Uzun basma ilerleme çubuğu */
-    .led-card::after {
-      content: '';
-      position: absolute;
-      left: 0;
-      bottom: 0;
-      height: 3px;
-      width: 0;
-      background: linear-gradient(90deg, rgba(255,255,255,0.4), #ffffff);
-      border-radius: 0 4px 4px 0;
-      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-    }
-
-    .led-card.pressing {
-      transform: scale(0.955);
-    }
-
-    .led-card.pressing::after {
-      width: 100%;
-      transition: width 1s linear;
-    }
-
-    .led-card * {
-      pointer-events: none;
-    }
-
-    /* Kart AÇIK (ON) Durumu - Sıvı Cam İçten Aydınlanma */
-    .led-card.on {
-      background: linear-gradient(
-        145deg,
-        rgba(255, 255, 255, 0.18) 0%,
-        rgba(255, 240, 210, 0.08) 100%
-      );
-      border-color: var(--glass-border-active);
-      border-top-color: rgba(255, 255, 255, 0.55);
-      box-shadow:
-        0 14px 34px rgba(0, 0, 0, 0.42),
-        0 0 28px var(--warm-glow),
-        inset 0 1px 1px rgba(255, 255, 255, 0.45);
-    }
-
-    .led-card.on::before {
-      opacity: 1;
-      background: radial-gradient(
-        circle at 25% 15%,
-        rgba(255, 244, 220, 0.28) 0%,
-        transparent 65%
-      );
-    }
-
-    /* Çevrimdışı Durumları */
-    .led-card.on.offline {
-      opacity: 0.55;
-      box-shadow: none;
-    }
-
-    .led-card.offline {
-      opacity: 0.38;
-    }
-
-    .led-card.loading {
-      opacity: 0.5;
-      pointer-events: none;
-    }
-
-    .led-card-top {
-      width: 100%;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      z-index: 1;
-    }
-
-    /* İkon Cam Kapsülü */
-    .icon-bubble {
-      width: 40px;
-      height: 40px;
-      border-radius: 14px;
-      background: rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.35s ease;
-    }
-
-    .led-card.on .icon-bubble {
-      background: rgba(255, 255, 255, 0.22);
-      border-color: rgba(255, 255, 255, 0.4);
-      box-shadow:
-        0 4px 14px rgba(255, 224, 160, 0.28),
-        inset 0 1px 0 rgba(255, 255, 255, 0.55);
-    }
-
-    .led-icon {
-      font-size: 21px;
-      line-height: 1;
-      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
-    }
-
-    .led-card.on .led-icon {
-      transform: scale(1.08);
-    }
-
-    .top-right-indicators {
-      display: flex;
-      align-items: center;
-      gap: 6px;
-    }
-
-    .offline-badge {
-      font-size: 11px;
-      opacity: 0.8;
-      display: none;
-    }
-
-    .led-card.offline .offline-badge {
-      display: inline-block;
-    }
-
-    .led-status-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.16);
-      transition: all 0.3s ease;
-    }
-
-    .led-card.on:not(.offline) .led-status-dot {
-      background: #ffffff;
-      box-shadow: 0 0 10px #ffffff, 0 0 18px rgba(255, 230, 170, 0.9);
-    }
-
-    .led-card-bottom {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      z-index: 1;
-    }
-
-    .led-name {
-      font-size: 15px;
-      font-weight: 600;
-      color: var(--text-secondary);
-      letter-spacing: -0.25px;
-      transition: color 0.3s ease;
-    }
-
-    .led-card.on .led-name {
-      color: #ffffff;
-    }
-
-    .led-status-text {
-      font-size: 12px;
-      font-weight: 400;
-      color: var(--text-tertiary);
-      margin-top: 2px;
-      transition: color 0.3s ease;
-    }
-
-    .led-card.on .led-status-text {
-      color: rgba(255, 255, 255, 0.85);
-      font-weight: 500;
-    }
-
-    /* Alt Merkezi Senaryo Butonları (Liquid Glass Pill) */
-    .footer-controls {
-      flex-shrink: 0;
-    }
-
-    .all-controls {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 14px;
-    }
-
-    .all-btn {
-      position: relative;
-      background: linear-gradient(
-        145deg,
-        rgba(255, 255, 255, 0.08) 0%,
-        rgba(255, 255, 255, 0.03) 100%
-      );
-      backdrop-filter: blur(28px) saturate(180%);
-      -webkit-backdrop-filter: blur(28px) saturate(180%);
-      border: 1px solid var(--glass-border);
-      border-top-color: rgba(255, 255, 255, 0.24);
-      box-shadow:
-        0 8px 24px rgba(0, 0, 0, 0.3),
-        inset 0 1px 0 rgba(255, 255, 255, 0.18);
-      border-radius: 22px;
-      color: #ffffff;
-      font-size: 13px;
-      font-weight: 500;
-      padding: 16px 12px;
-      cursor: pointer;
-      transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1), background 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 7px;
-      touch-action: manipulation;
-    }
-
-    .all-btn:active {
-      transform: scale(0.95);
-      background: rgba(255, 255, 255, 0.14);
-    }
-
-    /* Dinamik Ada (Dynamic Island) Tarzı Bildirim */
-    .toast {
-      position: fixed;
-      top: calc(14px + env(safe-area-inset-top));
-      left: 50%;
-      transform: translateX(-50%) translateY(-90px) scale(0.9);
-      background: rgba(18, 18, 22, 0.82);
-      backdrop-filter: blur(30px) saturate(200%);
-      -webkit-backdrop-filter: blur(30px) saturate(200%);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-top-color: rgba(255, 255, 255, 0.3);
-      border-radius: 999px;
-      color: #ffffff;
-      font-size: 12px;
-      font-weight: 500;
-      padding: 10px 20px;
-      transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s;
-      opacity: 0;
-      z-index: 120;
-      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.55);
-      white-space: nowrap;
-      pointer-events: none;
-    }
-
-    .toast.show {
-      transform: translateX(-50%) translateY(0) scale(1);
-      opacity: 1;
-    }
-
-    .toast.error {
-      border-color: rgba(255, 107, 107, 0.4);
-      color: #ff8585;
-    }
-
-    /* Apple Tarzı Liquid Glass Alt Menü (Action Sheet) */
-    .force-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(0, 0, 0, 0.55);
-      backdrop-filter: blur(10px);
-      -webkit-backdrop-filter: blur(10px);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.28s ease;
-      z-index: 100;
-    }
-
-    .force-overlay.show {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .force-sheet {
-      position: fixed;
-      left: 50%;
-      bottom: calc(12px + env(safe-area-inset-bottom));
-      width: calc(100% - 24px);
-      max-width: 406px;
-      transform: translate(-50%, 115%);
-      background: linear-gradient(
-        165deg,
-        rgba(38, 38, 46, 0.78) 0%,
-        rgba(20, 20, 25, 0.88) 100%
-      );
-      backdrop-filter: blur(40px) saturate(200%);
-      -webkit-backdrop-filter: blur(40px) saturate(200%);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      border-top-color: rgba(255, 255, 255, 0.34);
-      border-radius: 32px;
-      padding: 14px 18px 18px;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.65);
-      transition: transform 0.38s cubic-bezier(0.22, 1, 0.36, 1);
-      z-index: 101;
-    }
-
-    .force-overlay.show .force-sheet {
-      transform: translate(-50%, 0);
-    }
-
-    .sheet-grabber {
-      width: 36px;
-      height: 4px;
-      border-radius: 99px;
-      background: rgba(255, 255, 255, 0.25);
-      margin: 0 auto 14px;
-    }
-
-    .force-title {
-      font-size: 17px;
-      font-weight: 600;
-      text-align: center;
-      letter-spacing: -0.2px;
-    }
-
-    .force-sub {
-      font-size: 12px;
-      color: var(--text-secondary);
-      text-align: center;
-      margin: 4px 0 18px;
-    }
-
-    .force-btn {
-      width: 100%;
-      border: 1px solid rgba(255, 255, 255, 0.12);
-      border-top-color: rgba(255, 255, 255, 0.24);
-      background: rgba(255, 255, 255, 0.08);
-      color: #ffffff;
-      font-size: 15px;
-      font-weight: 500;
-      padding: 15px;
-      border-radius: 18px;
-      margin-bottom: 10px;
-      cursor: pointer;
-      transition: transform 0.18s ease, background 0.18s ease;
-    }
-
-    .force-btn:active {
-      transform: scale(0.97);
-    }
-
-    .force-btn.on {
-      background: rgba(255, 255, 255, 0.15);
-    }
-
-    .force-btn.off {
-      background: rgba(255, 69, 58, 0.14);
-      border-color: rgba(255, 69, 58, 0.28);
-      color: #ff6961;
-    }
-
-    .force-btn.cancel {
-      background: rgba(255, 255, 255, 0.04);
-      border-color: transparent;
-      color: var(--text-secondary);
-      margin-bottom: 0;
-    }
-
-    /* Küçük ekranlar için otomatik uyum */
-    @media (max-height: 700px) {
-      .live-time { font-size: 44px; }
-      .led-card { height: 106px; padding: 14px; border-radius: 22px; }
-      .icon-bubble { width: 34px; height: 34px; border-radius: 11px; }
-      .led-icon { font-size: 18px; }
-      .grid { gap: 10px; }
-      .all-btn { padding: 13px 10px; }
-    }
-  </style>
+
+
+<style>
+/* =========================================
+   FUTURE CONTROL — BLACK EDITION
+   Akıllı Ev Arayüzü
+   ========================================= */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+
+:root {
+  --background: #050506;
+  --background-soft: #0b0c0e;
+
+  --surface: #111214;
+  --surface-light: #181a1d;
+  --surface-active: #202226;
+
+  --border: rgba(255,255,255,.075);
+  --border-light: rgba(255,255,255,.13);
+
+  --white: #f4f5f6;
+  --secondary: #a2a5aa;
+  --muted: #656970;
+
+  --glow: rgba(255,255,255,.10);
+  --radius: 23px;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background: var(--background);
+  color: var(--white);
+  font-family:
+    -apple-system,
+    BlinkMacSystemFont,
+    "SF Pro Display",
+    "SF Pro Text",
+    system-ui,
+    sans-serif;
+  overflow: hidden;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  position: relative;
+
+  padding:
+    env(safe-area-inset-top)
+    env(safe-area-inset-right)
+    env(safe-area-inset-bottom)
+    env(safe-area-inset-left);
+}
+
+/* =========================================
+   BACKGROUND — DEEP BLACK
+   ========================================= */
+
+.ambient-bg {
+  position: fixed;
+  inset: 0;
+  overflow: hidden;
+  z-index: 0;
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(255,255,255,.055),
+      transparent 48%
+    ),
+    linear-gradient(
+      180deg,
+      #111214 0%,
+      #080809 45%,
+      #030304 100%
+    );
+}
+
+/* Çok hafif arka plan ışıkları */
+
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(100px);
+  opacity: .25;
+  animation: floatOrb 24s ease-in-out infinite alternate;
+}
+
+.orb-1 {
+  width: 300px;
+  height: 300px;
+  top: -150px;
+  left: -120px;
+  background: rgba(190,195,205,.16);
+}
+
+.orb-2 {
+  width: 300px;
+  height: 300px;
+  right: -150px;
+  bottom: 5%;
+  background: rgba(150,155,165,.10);
+  animation-delay: -8s;
+}
+
+.orb-3 {
+  width: 220px;
+  height: 220px;
+  top: 45%;
+  left: 20%;
+  background: rgba(255,255,255,.045);
+  animation-delay: -13s;
+}
+
+@keyframes floatOrb {
+  from {
+    transform: translate(0,0) scale(1);
+  }
+  to {
+    transform: translate(18px,-20px) scale(1.08);
+  }
+}
+
+/* =========================================
+   MAIN APP
+   ========================================= */
+
+.app {
+  position: relative;
+  z-index: 1;
+
+  width: 100%;
+  max-width: 430px;
+  height: 100dvh;
+
+  padding: 23px 22px 26px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+/* =========================================
+   HEADER — DIGITAL CLOCK
+   ========================================= */
+
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  padding-top: 12px;
+  flex-shrink: 0;
+}
+
+.live-time {
+  font-size: 65px;
+  font-weight: 250;
+  letter-spacing: -4px;
+  line-height: 1;
+
+  color: #f5f5f5;
+
+  font-variant-numeric: tabular-nums;
+
+  text-shadow:
+    0 0 28px rgba(255,255,255,.055);
+}
+
+.greeting-pill {
+  margin-top: 13px;
+
+  padding: 7px 16px;
+
+  border-radius: 999px;
+
+  background: rgba(255,255,255,.045);
+
+  border: 1px solid rgba(255,255,255,.105);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.075);
+
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.greeting-text {
+  font-size: 12px;
+  font-weight: 500;
+  color: #dedfe1;
+  letter-spacing: .1px;
+}
+
+.live-date {
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--muted);
+
+  margin-top: 9px;
+
+  text-transform: capitalize;
+  letter-spacing: .2px;
+}
+
+/* =========================================
+   MAIN CONTENT
+   ========================================= */
+
+.main-content {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  min-height: 0;
+  margin: 12px 0;
+}
+
+.section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  margin-bottom: 15px;
+  padding: 0 4px;
+}
+
+.section-label {
+  font-size: 10px;
+  font-weight: 650;
+
+  letter-spacing: .19em;
+  text-transform: uppercase;
+
+  color: #777b81;
+}
+
+.active-count {
+  font-size: 11px;
+  font-weight: 500;
+  color: #bfc1c5;
+
+  font-variant-numeric: tabular-nums;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+/* =========================================
+   ROOM CARDS — FUTURE CONTROL
+   ========================================= */
+
+.led-card {
+  position: relative;
+
+  height: 124px;
+  padding: 16px;
+
+  border-radius: var(--radius);
+
+  cursor: pointer;
+  overflow: hidden;
+  isolation: isolate;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  touch-action: manipulation;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.065),
+      rgba(255,255,255,.018)
+    );
+
+  border: 1px solid var(--border);
+
+  border-top-color: rgba(255,255,255,.15);
+
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+
+  box-shadow:
+    0 9px 25px rgba(0,0,0,.30),
+    inset 0 1px 0 rgba(255,255,255,.075);
+
+  transition:
+    transform .23s cubic-bezier(.22,1,.36,1),
+    background .3s ease,
+    border-color .3s ease,
+    box-shadow .3s ease,
+    opacity .25s ease;
+}
+
+/* Cam yüzey yansıması */
+
+.led-card::before {
+  content: "";
+
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+
+  pointer-events: none;
+
+  background:
+    radial-gradient(
+      ellipse at 15% 0%,
+      rgba(255,255,255,.105),
+      transparent 57%
+    ),
+    linear-gradient(
+      125deg,
+      rgba(255,255,255,.025),
+      transparent 60%
+    );
+
+  opacity: .75;
+  transition: opacity .3s ease;
+}
+
+/* Uzun basma göstergesi */
+
+.led-card::after {
+  content: "";
+
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  width: 0;
+  height: 2px;
+
+  background: linear-gradient(
+    90deg,
+    rgba(255,255,255,.25),
+    #f1f1f1
+  );
+
+  box-shadow: 0 0 10px rgba(255,255,255,.45);
+  border-radius: 0 5px 5px 0;
+}
+
+.led-card.pressing {
+  transform: scale(.96);
+}
+
+.led-card.pressing::after {
+  width: 100%;
+  transition: width 1s linear;
+}
+
+.led-card * {
+  pointer-events: none;
+}
+
+/* =========================================
+   ACTIVE ROOM
+   ========================================= */
+
+.led-card.on {
+  background:
+    radial-gradient(
+      ellipse at 20% 0%,
+      rgba(255,255,255,.105),
+      transparent 65%
+    ),
+    linear-gradient(
+      145deg,
+      #26282b,
+      #151618
+    );
+
+  border-color: rgba(255,255,255,.20);
+  border-top-color: rgba(255,255,255,.34);
+
+  box-shadow:
+    0 12px 28px rgba(0,0,0,.38),
+    0 0 22px rgba(255,255,255,.035),
+    inset 0 1px 0 rgba(255,255,255,.17);
+}
+
+.led-card.on::before {
+  opacity: 1;
+
+  background:
+    radial-gradient(
+      circle at 25% 12%,
+      rgba(255,255,255,.14),
+      transparent 65%
+    );
+}
+
+/* =========================================
+   OFFLINE / LOADING
+   ========================================= */
+
+.led-card.offline {
+  opacity: .38;
+}
+
+.led-card.on.offline {
+  opacity: .55;
+  box-shadow: none;
+}
+
+.led-card.loading {
+  opacity: .5;
+  pointer-events: none;
+}
+
+/* =========================================
+   ROOM ICONS
+   ========================================= */
+
+.led-card-top {
+  width: 100%;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  z-index: 1;
+}
+
+.icon-bubble {
+  width: 40px;
+  height: 40px;
+
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255,255,255,.055);
+
+  border: 1px solid rgba(255,255,255,.095);
+
+  box-shadow:
+    inset 0 1px 0 rgba(255,255,255,.09);
+
+  transition:
+    background .3s ease,
+    border-color .3s ease,
+    box-shadow .3s ease;
+}
+
+.led-card.on .icon-bubble {
+  background: rgba(255,255,255,.13);
+
+  border-color: rgba(255,255,255,.20);
+
+  box-shadow:
+    0 0 14px rgba(255,255,255,.055),
+    inset 0 1px 0 rgba(255,255,255,.17);
+}
+
+.led-icon {
+  font-size: 21px;
+  line-height: 1;
+
+  transition: transform .3s ease;
+}
+
+.led-card.on .led-icon {
+  transform: scale(1.07);
+}
+
+.top-right-indicators {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.offline-badge {
+  font-size: 11px;
+  opacity: .8;
+  display: none;
+}
+
+.led-card.offline .offline-badge {
+  display: inline-block;
+}
+
+.led-status-dot {
+  width: 7px;
+  height: 7px;
+
+  border-radius: 50%;
+
+  background: rgba(255,255,255,.19);
+
+  transition: all .3s ease;
+}
+
+.led-card.on:not(.offline) .led-status-dot {
+  background: #eeeeee;
+
+  box-shadow:
+    0 0 7px rgba(255,255,255,.85),
+    0 0 14px rgba(255,255,255,.18);
+}
+
+/* =========================================
+   ROOM TEXT
+   ========================================= */
+
+.led-card-bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+
+  z-index: 1;
+}
+
+.led-name {
+  font-size: 14px;
+  font-weight: 600;
+
+  color: #b9bbc0;
+  letter-spacing: -.2px;
+
+  transition: color .3s ease;
+}
+
+.led-card.on .led-name {
+  color: #ffffff;
+}
+
+.led-status-text {
+  font-size: 11px;
+  font-weight: 400;
+
+  color: #696d73;
+
+  margin-top: 4px;
+
+  transition: color .3s ease;
+}
+
+.led-card.on .led-status-text {
+  color: #c9cbd0;
+  font-weight: 500;
+}
+
+/* =========================================
+   CENTRAL CONTROLS
+   ========================================= */
+
+.footer-controls {
+  flex-shrink: 0;
+}
+
+.all-controls {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.all-btn {
+  position: relative;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255,255,255,.075),
+      rgba(255,255,255,.025)
+    );
+
+  border: 1px solid rgba(255,255,255,.105);
+  border-top-color: rgba(255,255,255,.19);
+
+  border-radius: 19px;
+
+  color: #e9e9ea;
+
+  font-size: 12px;
+  font-weight: 550;
+
+  padding: 17px 10px;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  box-shadow:
+    0 8px 20px rgba(0,0,0,.25),
+    inset 0 1px 0 rgba(255,255,255,.065);
+
+  transition:
+    transform .2s ease,
+    background .2s ease,
+    border-color .2s ease;
+
+  touch-action: manipulation;
+}
+
+.all-btn:active {
+  transform: scale(.96);
+  background: rgba(255,255,255,.13);
+}
+
+/* =========================================
+   TOAST NOTIFICATIONS
+   ========================================= */
+
+.toast {
+  position: fixed;
+
+  top: calc(14px + env(safe-area-inset-top));
+  left: 50%;
+
+  transform: translateX(-50%) translateY(-90px) scale(.94);
+
+  background: rgba(24,25,28,.94);
+
+  backdrop-filter: blur(25px);
+  -webkit-backdrop-filter: blur(25px);
+
+  border: 1px solid rgba(255,255,255,.14);
+  border-top-color: rgba(255,255,255,.24);
+
+  border-radius: 999px;
+
+  color: #f3f3f3;
+
+  font-size: 12px;
+  font-weight: 500;
+
+  padding: 11px 20px;
+
+  transition:
+    transform .35s cubic-bezier(.22,1,.36,1),
+    opacity .28s;
+
+  opacity: 0;
+  z-index: 120;
+
+  box-shadow: 0 12px 32px rgba(0,0,0,.5);
+
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+.toast.show {
+  transform: translateX(-50%) translateY(0) scale(1);
+  opacity: 1;
+}
+
+.toast.error {
+  border-color: rgba(255,110,110,.35);
+  color: #ff9696;
+}
+
+/* =========================================
+   FORCE CONTROL OVERLAY
+   ========================================= */
+
+.force-overlay {
+  position: fixed;
+  inset: 0;
+
+  background: rgba(0,0,0,.72);
+
+  backdrop-filter: blur(11px);
+  -webkit-backdrop-filter: blur(11px);
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: opacity .28s ease;
+
+  z-index: 100;
+}
+
+.force-overlay.show {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Alt kontrol paneli */
+
+.force-sheet {
+  position: fixed;
+
+  left: 50%;
+
+  bottom: calc(12px + env(safe-area-inset-bottom));
+
+  width: calc(100% - 24px);
+  max-width: 406px;
+
+  transform: translate(-50%,115%);
+
+  background:
+    radial-gradient(
+      ellipse at 50% 0%,
+      rgba(255,255,255,.075),
+      transparent 65%
+    ),
+    linear-gradient(
+      160deg,
+      rgba(35,36,40,.97),
+      rgba(13,14,16,.98)
+    );
+
+  backdrop-filter: blur(35px);
+  -webkit-backdrop-filter: blur(35px);
+
+  border: 1px solid rgba(255,255,255,.15);
+  border-top-color: rgba(255,255,255,.29);
+
+  border-radius: 29px;
+
+  padding: 14px 18px 18px;
+
+  box-shadow:
+    0 24px 60px rgba(0,0,0,.65),
+    inset 0 1px 0 rgba(255,255,255,.08);
+
+  transition: transform .38s cubic-bezier(.22,1,.36,1);
+
+  z-index: 101;
+}
+
+.force-overlay.show .force-sheet {
+  transform: translate(-50%,0);
+}
+
+/* Panel tutamacı */
+
+.sheet-grabber {
+  width: 36px;
+  height: 4px;
+
+  border-radius: 99px;
+
+  background: rgba(255,255,255,.25);
+
+  margin: 0 auto 15px;
+}
+
+.force-title {
+  font-size: 17px;
+  font-weight: 600;
+
+  text-align: center;
+  letter-spacing: -.2px;
+
+  color: #f5f5f5;
+}
+
+.force-sub {
+  font-size: 11px;
+  line-height: 1.5;
+
+  color: #96999e;
+
+  text-align: center;
+
+  margin: 5px 0 18px;
+}
+
+/* Zorla kontrol butonları */
+
+.force-btn {
+  width: 100%;
+
+  border: 1px solid rgba(255,255,255,.10);
+  border-top-color: rgba(255,255,255,.19);
+
+  background: rgba(255,255,255,.065);
+
+  color: #eeeeef;
+
+  font-size: 14px;
+  font-weight: 550;
+
+  padding: 15px;
+
+  border-radius: 16px;
+
+  margin-bottom: 10px;
+
+  cursor: pointer;
+
+  transition:
+    transform .18s ease,
+    background .18s ease;
+}
+
+.force-btn:active {
+  transform: scale(.97);
+}
+
+.force-btn.on {
+  background: rgba(255,255,255,.13);
+  border-color: rgba(255,255,255,.20);
+}
+
+.force-btn.off {
+  background: rgba(180,70,70,.12);
+  border-color: rgba(220,100,100,.22);
+  color: #ffaaaa;
+}
+
+.force-btn.cancel {
+  background: rgba(255,255,255,.025);
+  border-color: transparent;
+  color: #a1a3a7;
+
+  margin-bottom: 0;
+}
+
+/* =========================================
+   RESPONSIVE — SMALL SCREENS
+   ========================================= */
+
+@media (max-height: 700px) {
+  .app {
+    padding-top: 14px;
+    padding-bottom: 18px;
+  }
+
+  header {
+    padding-top: 5px;
+  }
+
+  .live-time {
+    font-size: 47px;
+  }
+
+  .led-card {
+    height: 104px;
+    padding: 13px;
+    border-radius: 19px;
+  }
+
+  .icon-bubble {
+    width: 34px;
+    height: 34px;
+    border-radius: 11px;
+  }
+
+  .led-icon {
+    font-size: 18px;
+  }
+
+  .grid {
+    gap: 9px;
+  }
+
+  .all-btn {
+    padding: 13px 9px;
+  }
+}
+
+/* Hareket azaltma tercihi */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    transition-duration: .01ms !important;
+  }
+}
+
+
+/* =========================================
+   STEALTH CONTROL — SOFT BLACK
+   Daha az ışık, daha kaliteli geçişler
+   ========================================= */
+
+/* Arka planı daha da karart */
+.ambient-bg {
+  background: linear-gradient(
+    180deg,
+    #0b0b0d 0%,
+    #060607 55%,
+    #030304 100%
+  );
+}
+
+.orb {
+  opacity: .10;
+  filter: blur(115px);
+}
+
+.orb-1 {
+  background: rgba(190,195,205,.08);
+}
+
+.orb-2 {
+  background: rgba(150,155,165,.06);
+}
+
+.orb-3 {
+  background: rgba(255,255,255,.035);
+}
+
+/* Saat */
+.live-time {
+  color: #e9e9e9;
+  text-shadow: none;
+}
+
+/* Karşılama alanı */
+.greeting-pill {
+  background: rgba(255,255,255,.025);
+  border-color: rgba(255,255,255,.07);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.035);
+}
+
+.greeting-text {
+  color: #c9c9cb;
+}
+
+/* Oda kartları */
+.led-card {
+  background: linear-gradient(
+    145deg,
+    rgba(255,255,255,.045),
+    rgba(255,255,255,.012)
+  );
+
+  border-color: rgba(255,255,255,.065);
+  border-top-color: rgba(255,255,255,.11);
+
+  box-shadow:
+    0 8px 20px rgba(0,0,0,.32),
+    inset 0 1px 0 rgba(255,255,255,.045);
+}
+
+.led-card::before {
+  background: radial-gradient(
+    ellipse at 15% 0%,
+    rgba(255,255,255,.065),
+    transparent 60%
+  );
+
+  opacity: .5;
+}
+
+.led-card::after {
+  background: #bcbec2;
+  box-shadow: none;
+}
+
+/* Açık oda */
+.led-card.on {
+  background: linear-gradient(
+    145deg,
+    #202124,
+    #151618
+  );
+
+  border-color: rgba(255,255,255,.15);
+  border-top-color: rgba(255,255,255,.22);
+
+  box-shadow:
+    0 9px 22px rgba(0,0,0,.34),
+    inset 0 1px 0 rgba(255,255,255,.09);
+}
+
+.led-card.on::before {
+  background: radial-gradient(
+    ellipse at 20% 0%,
+    rgba(255,255,255,.075),
+    transparent 65%
+  );
+}
+
+/* İkon kapsülleri */
+.icon-bubble {
+  background: rgba(255,255,255,.035);
+  border-color: rgba(255,255,255,.065);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
+}
+
+.led-card.on .icon-bubble {
+  background: rgba(255,255,255,.075);
+  border-color: rgba(255,255,255,.14);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.09);
+}
+
+/* Durum ışığı */
+.led-status-dot {
+  background: #44464a;
+}
+
+.led-card.on:not(.offline) .led-status-dot {
+  background: #d6d6d6;
+  box-shadow: 0 0 4px rgba(255,255,255,.28);
+}
+
+/* Metinler */
+.led-name {
+  color: #b6b6b9;
+}
+
+.led-card.on .led-name {
+  color: #ececee;
+}
+
+.led-status-text {
+  color: #66686c;
+}
+
+.led-card.on .led-status-text {
+  color: #aeb0b4;
+}
+
+/* Merkezi butonlar */
+.all-btn {
+  background: rgba(255,255,255,.035);
+  border-color: rgba(255,255,255,.075);
+  border-top-color: rgba(255,255,255,.12);
+  box-shadow: inset 0 1px 0 rgba(255,255,255,.045);
+  color: #dedee0;
+}
+
+.all-btn:active {
+  background: rgba(255,255,255,.075);
+}
+
+/* Bildirim */
+.toast {
+  background: rgba(20,20,22,.97);
+  border-color: rgba(255,255,255,.10);
+  border-top-color: rgba(255,255,255,.16);
+}
+
+/* Zorla kontrol paneli */
+.force-sheet {
+  background: linear-gradient(
+    160deg,
+    rgba(34,34,37,.98),
+    rgba(12,12,14,.99)
+  );
+
+  border-color: rgba(255,255,255,.10);
+  border-top-color: rgba(255,255,255,.19);
+
+  box-shadow: 0 20px 50px rgba(0,0,0,.6);
+}
+
+/* =========================================
+   YENİ AÇMA / KAPATMA ANİMASYONLARI
+   ========================================= */
+
+/* Açılırken yumuşak geçiş */
+.led-card.just-turned-on {
+  animation: stealthOn .58s cubic-bezier(.2,.75,.25,1) both;
+}
+
+/* Kapanırken sakin geçiş */
+.led-card.just-turned-off {
+  animation: stealthOff .48s ease-out both;
+}
+
+@keyframes stealthOn {
+  0% {
+    transform: scale(.985);
+    filter: brightness(.93);
+  }
+
+  45% {
+    transform: scale(1.008);
+    filter: brightness(1.045);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+@keyframes stealthOff {
+  0% {
+    transform: scale(1.006);
+    filter: brightness(1.035);
+  }
+
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+}
+
+/* İkonun küçük hareketi */
+.led-card.just-turned-on .icon-bubble {
+  animation: capsuleOn .48s ease-out;
+}
+
+@keyframes capsuleOn {
+  0% {
+    transform: scale(.96);
+  }
+
+  55% {
+    transform: scale(1.055);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Durum noktasında çok hafif nabız */
+.led-card.just-turned-on .led-status-dot {
+  animation: dotOn .55s ease-out;
+}
+
+@keyframes dotOn {
+  0% {
+    box-shadow: 0 0 0 0 rgba(255,255,255,0);
+  }
+
+  50% {
+    box-shadow: 0 0 0 4px rgba(255,255,255,.07);
+  }
+
+  100% {
+    box-shadow: 0 0 4px rgba(255,255,255,.28);
+  }
+}
+
+/* Hareket azaltma tercihi */
+@media (prefers-reduced-motion: reduce) {
+  .led-card.just-turned-on,
+  .led-card.just-turned-off,
+  .led-card.just-turned-on .icon-bubble,
+  .led-card.just-turned-on .led-status-dot {
+    animation: none !important;
+  }
+}
+
+</style>
+
+
 </head>
 <body>
 
@@ -665,6 +1238,7 @@
   const FETCH_TIMEOUT_MS = 3000;
   const state = {};
   const networkStatus = {};
+  const lastRenderedState = {};
 
   function loadStoredState() {
     try {
@@ -739,17 +1313,27 @@
     const grid = document.getElementById('ledGrid');
     grid.innerHTML = '';
     LEDS.forEach(led => {
-      const isOn = state[led.id];
-      const isOnline = networkStatus[led.id];
-      const isOffline = isOnline === false;
+const isOn = state[led.id];
+const isOnline = networkStatus[led.id];
+const isOffline = isOnline === false;
 
-      const card = document.createElement('div');
-      let cls = 'led-card';
-      if (isOn) cls += ' on';
-      if (isOffline) cls += ' offline';
-      card.className = cls;
-      card.id = 'card-' + led.id;
+const previousState = lastRenderedState[led.id];
 
+const card = document.createElement('div');
+
+let cls = 'led-card';
+
+if (isOn) cls += ' on';
+if (isOffline) cls += ' offline';
+
+if (previousState !== undefined && previousState !== isOn) {
+  cls += isOn ? ' just-turned-on' : ' just-turned-off';
+}
+
+card.className = cls;
+card.id = 'card-' + led.id;
+
+lastRenderedState[led.id] = isOn;
       let statusText;
       if (isOffline) {
         statusText = isOn ? 'Açık · Çevrimdışı' : 'Ulaşılamıyor';
