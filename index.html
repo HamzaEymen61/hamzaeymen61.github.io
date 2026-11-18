@@ -1,95 +1,162 @@
 <!DOCTYPE html>
-<html lang="tr"><head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-  <meta name="theme-color" content="#0a0a0c">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Akıllı Ev">
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <meta name="theme-color" content="#050507" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Akıllı Ev" />
   <title>Akıllı Ev</title>
-    <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
 
     :root {
-      --bg-gradient: radial-gradient(circle at 50% 0%, #1a1a24 0%, #0a0a0c 70%);
-      --card-bg: rgba(255, 255, 255, 0.03);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-border-active: rgba(255, 255, 255, 0.25);
-      --text: #ffffff;
-      --text-muted: #71717a;
-      --glow-color: rgba(255, 255, 255, 0.15); 
-      --on-text: #ffffff;
+      --bg-base: #050507;
+      --glass-surface: rgba(255, 255, 255, 0.045);
+      --glass-surface-hover: rgba(255, 255, 255, 0.075);
+      --glass-active: rgba(255, 255, 255, 0.14);
+      --glass-border-top: rgba(255, 255, 255, 0.24);
+      --glass-border-side: rgba(255, 255, 255, 0.09);
+      --glass-border-bottom: rgba(255, 255, 255, 0.04);
+      --text-primary: rgba(255, 255, 255, 0.96);
+      --text-secondary: rgba(255, 255, 255, 0.56);
+      --text-tertiary: rgba(255, 255, 255, 0.36);
+      --amber-glow: rgba(255, 214, 102, 0.28);
+      --amber-accent: #ffd60a;
+      --danger: #ff453a;
     }
 
     body {
-      background: var(--bg-gradient);
-      color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'Segoe UI', sans-serif;
+      background-color: var(--bg-base);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'SF Pro Display', 'SF Pro Text', system-ui, sans-serif;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
       height: 100dvh;
       display: flex;
       justify-content: center;
       align-items: center;
       overflow: hidden;
+      position: relative;
       padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
     }
 
+    /* Apple Liquid Glass arka plan ışık küreleri (derinlik ve kırılma hissi için) */
+    body::before,
+    body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50%;
+      filter: blur(85px);
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.55;
+      animation: floatOrb 18s ease-in-out infinite alternate;
+    }
+
+    body::before {
+      width: 340px;
+      height: 340px;
+      top: -80px;
+      left: -60px;
+      background: radial-gradient(circle, rgba(56, 112, 255, 0.28) 0%, rgba(120, 80, 255, 0.08) 60%, transparent 100%);
+    }
+
+    body::after {
+      width: 320px;
+      height: 320px;
+      bottom: -90px;
+      right: -70px;
+      background: radial-gradient(circle, rgba(255, 179, 64, 0.16) 0%, rgba(94, 92, 230, 0.14) 55%, transparent 100%);
+      animation-delay: -9s;
+    }
+
+    @keyframes floatOrb {
+      0%   { transform: translate3d(0, 0, 0) scale(1); }
+      100% { transform: translate3d(24px, 32px, 0) scale(1.08); }
+    }
+
     .app {
+      position: relative;
+      z-index: 1;
       width: 100%;
       max-width: 420px;
       height: 100%;
-      padding: 30px 24px;
+      padding: 26px 22px 24px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
 
-    header { 
+    /* ===== ÜST BÖLÜM: SAAT & DURUM ===== */
+    header {
       display: flex;
       flex-direction: column;
       align-items: center;
       text-align: center;
-      margin-top: 15px;
-      margin-bottom: 5px;
-      min-height: 85px;
+      margin-top: 10px;
+      margin-bottom: 4px;
     }
 
     .live-time {
-      font-size: 46px;
+      font-size: 56px;
       font-weight: 200;
-      letter-spacing: -1.2px;
-      color: #ffffff;
-      line-height: 0.95;
+      letter-spacing: -2px;
+      font-variant-numeric: tabular-nums;
+      line-height: 0.96;
+      background: linear-gradient(180deg, #ffffff 30%, rgba(255, 255, 255, 0.68) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 4px 24px rgba(255, 255, 255, 0.08));
     }
 
     .greeting-text {
-      font-size: 13px;
-      font-weight: 500;
-      color: #ffffff;
-      margin-top: 6px;
-      letter-spacing: -0.1px;
-      opacity: 0.85;
-      min-height: 16px;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-top: 8px;
+      letter-spacing: -0.2px;
+      opacity: 0.92;
+      min-height: 18px;
     }
 
     .live-date {
-      font-size: 11px;
+      font-size: 12px;
       font-weight: 400;
-      color: var(--text-muted);
-      margin-top: 4px;
+      color: var(--text-secondary);
+      margin-top: 3px;
       letter-spacing: 0.01em;
       text-transform: capitalize;
-      min-height: 14px;
+      min-height: 15px;
     }
 
-    .section-label {
+    .version-pill {
+      margin-top: 8px;
       font-size: 10px;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      color: var(--text-tertiary);
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      padding: 3px 10px;
+      border-radius: 999px;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    /* ===== BÖLÜM BAŞLIKLARI ===== */
+    .section-label {
+      font-size: 12px;
       font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 14px;
-      margin-top: 10px;
-      opacity: 0.7;
+      letter-spacing: -0.01em;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+      margin-left: 4px;
     }
 
     .main-content {
@@ -99,34 +166,73 @@
       justify-content: center;
     }
 
+    /* ===== APPLE HOME LIQUID GLASS KARTLAR ===== */
     .grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
+      gap: 13px;
     }
 
     .led-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      border-radius: 22px;
+      position: relative;
+      height: 124px;
+      border-radius: 26px;
       padding: 16px;
       cursor: pointer;
-      backdrop-filter: blur(25px);
-      -webkit-backdrop-filter: blur(25px);
-      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-      user-select: none;
-      -webkit-user-select: none;
-      -webkit-tap-highlight-color: transparent;
-      -webkit-touch-callout: none; /* iOS uzun basış menüsünü kapatır */
-      touch-action: none; /* tarayıcı kaydırma/jest için pointercancel göndermesin */
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       align-items: flex-start;
-      height: 118px;
-      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.15);
-      position: relative;
       overflow: hidden;
+
+      /* Liquid Glass çok katmanlı cam yüzeyi */
+      background: linear-gradient(
+        155deg,
+        rgba(255, 255, 255, 0.085) 0%,
+        rgba(255, 255, 255, 0.025) 55%,
+        rgba(255, 255, 255, 0.045) 100%
+      );
+      backdrop-filter: blur(36px) saturate(180%);
+      -webkit-backdrop-filter: blur(36px) saturate(180%);
+
+      /* Kenar ışık kırılması (specular rim) */
+      border-top: 1px solid var(--glass-border-top);
+      border-left: 1px solid rgba(255, 255, 255, 0.14);
+      border-right: 1px solid var(--glass-border-side);
+      border-bottom: 1px solid var(--glass-border-bottom);
+
+      box-shadow:
+        0 10px 30px -6px rgba(0, 0, 0, 0.55),
+        inset 0 1px 1px rgba(255, 255, 255, 0.18),
+        inset 0 -8px 20px rgba(0, 0, 0, 0.25);
+
+      transition:
+        transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+        background 0.4s ease,
+        box-shadow 0.4s ease,
+        border-color 0.4s ease,
+        opacity 0.35s ease;
+
+      user-select: none;
+      -webkit-user-select: none;
+      -webkit-tap-highlight-color: transparent;
+      -webkit-touch-callout: none;
+      touch-action: none;
+    }
+
+    /* Üst cam parlama yansıması */
+    .led-card::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: radial-gradient(
+        120% 80% at 15% 0%,
+        rgba(255, 255, 255, 0.14) 0%,
+        rgba(255, 255, 255, 0) 60%
+      );
+      pointer-events: none;
+      transition: opacity 0.4s ease;
     }
 
     .led-card * {
@@ -136,49 +242,82 @@
       -webkit-touch-callout: none;
     }
 
-    .led-card:active { transform: scale(0.95); }
+    .led-card:active {
+      transform: scale(0.955);
+    }
 
-    /* 2 sn dolan ilerleme çubuğu */
+    /* Uzun basma ilerleme çizgisi (Liquid shimmer) */
     .led-card::after {
       content: '';
       position: absolute;
-      left: 0; bottom: 0;
-      height: 3px; width: 0;
-      background: rgba(255,255,255,0.7);
+      left: 0;
+      bottom: 0;
+      height: 3px;
+      width: 0;
+      background: linear-gradient(90deg, rgba(255, 255, 255, 0.4), #ffffff);
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
       border-radius: 0 3px 3px 0;
     }
+
     .led-card.pressing::after {
       width: 100%;
       transition: width 1s linear;
     }
-    .led-card.pressing { transform: scale(0.96); }
 
-    /* Açık kart: hem online hem on */
-    .led-card.on {
-      background: rgba(255, 255, 255, 0.06);
-      border-color: var(--card-border-active);
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35), 0 0 20px var(--glow-color);
+    .led-card.pressing {
+      transform: scale(0.95);
     }
 
-    /* Offline ama son durum "açık" — soluk parlak */
+    /* ===== AÇIK (ON) DURUMU — APPLE HOME AYDINLATMA CAMI ===== */
+    .led-card.on {
+      background: linear-gradient(
+        155deg,
+        rgba(255, 255, 255, 0.22) 0%,
+        rgba(255, 244, 214, 0.11) 50%,
+        rgba(255, 255, 255, 0.14) 100%
+      );
+      border-top: 1px solid rgba(255, 255, 255, 0.52);
+      border-left: 1px solid rgba(255, 255, 255, 0.30);
+      border-right: 1px solid rgba(255, 255, 255, 0.18);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow:
+        0 14px 34px -6px rgba(0, 0, 0, 0.6),
+        0 0 28px -4px rgba(255, 224, 140, 0.22),
+        inset 0 1px 1.5px rgba(255, 255, 255, 0.45);
+    }
+
+    .led-card.on::before {
+      background: radial-gradient(
+        130% 90% at 15% 0%,
+        rgba(255, 245, 210, 0.32) 0%,
+        rgba(255, 255, 255, 0) 65%
+      );
+    }
+
+    /* Offline ama son durum "açık" */
     .led-card.on.offline {
-      opacity: 0.55;
-      border-color: rgba(255,255,255,0.12);
-      box-shadow: none;
+      opacity: 0.52;
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
     }
 
     /* Offline ve kapalı */
-    .led-card.offline { opacity: 0.25; }
+    .led-card.offline {
+      opacity: 0.32;
+    }
 
-    .led-card.loading { opacity: 0.4; pointer-events: none; }
+    .led-card.loading {
+      opacity: 0.45;
+      pointer-events: none;
+    }
 
     .offline-badge {
       position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 10px;
-      opacity: 0.6;
+      top: 13px;
+      right: 13px;
+      font-size: 11px;
+      opacity: 0.75;
       display: none;
+      z-index: 2;
     }
     .led-card.offline .offline-badge { display: block; }
 
@@ -186,212 +325,287 @@
       width: 100%;
       display: flex;
       justify-content: space-between;
-      align-items: flex-start;
+      align-items: center;
+      z-index: 1;
+    }
+
+    /* Apple Home tarzı dairesel cam ikon rozeti */
+    .led-icon-wrap {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: inset 0 1px 0.5px rgba(255, 255, 255, 0.15);
+      transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .led-card.on .led-icon-wrap {
+      background: rgba(255, 214, 10, 0.22);
+      border-color: rgba(255, 224, 102, 0.48);
+      box-shadow:
+        0 0 16px rgba(255, 214, 10, 0.32),
+        inset 0 1px 1px rgba(255, 255, 255, 0.45);
+      transform: scale(1.04);
     }
 
     .led-icon {
-      font-size: 24px;
+      font-size: 20px;
+      line-height: 1;
       transition: transform 0.3s ease;
     }
-    
-    .led-card.on .led-icon { transform: scale(1.06); }
 
     .led-status-dot {
-      width: 6px;
-      height: 6px;
+      width: 7px;
+      height: 7px;
       border-radius: 50%;
-      background: rgba(255, 255, 255, 0.1);
-      margin-top: 6px;
-      transition: all 0.3s ease;
+      background: rgba(255, 255, 255, 0.14);
+      transition: all 0.35s ease;
     }
 
     .led-card.on:not(.offline) .led-status-dot {
-      background: #ffffff;
-      box-shadow: 0 0 8px #ffffff;
+      background: var(--amber-accent);
+      box-shadow: 0 0 10px var(--amber-accent), 0 0 4px #ffffff;
+    }
+
+    .led-card.offline .led-status-dot {
+      display: none;
     }
 
     .led-card-bottom {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+      z-index: 1;
     }
 
     .led-name {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
-      color: var(--text-muted);
-      letter-spacing: -0.1px;
+      color: rgba(255, 255, 255, 0.72);
+      letter-spacing: -0.22px;
       transition: color 0.3s ease;
     }
-    
-    .led-card.on .led-name { color: var(--on-text); }
 
-    .led-status-text {
-      font-size: 11px;
-      font-weight: 500;
-      color: var(--text-muted);
-      margin-top: 3px;
+    .led-card.on .led-name {
+      color: #ffffff;
     }
 
-    .led-card.on .led-status-text { color: #ffffff; opacity: 0.85; }
+    .led-status-text {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-tertiary);
+      margin-top: 2px;
+      letter-spacing: -0.08px;
+      transition: color 0.3s ease;
+    }
 
+    .led-card.on .led-status-text {
+      color: rgba(255, 242, 204, 0.88);
+    }
+
+    /* ===== ALT SENARYO BUTONLARI (LIQUID GLASS PILL) ===== */
     .all-controls {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 14px;
-      margin-top: 8px;
-      margin-bottom: 8px;
+      gap: 12px;
+      margin-top: 4px;
+      margin-bottom: 4px;
     }
 
     .all-btn {
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--card-border);
-      border-radius: 18px;
-      color: var(--text);
-      font-size: 12px;
-      font-weight: 500;
-      padding: 15px;
+      position: relative;
+      background: linear-gradient(
+        160deg,
+        rgba(255, 255, 255, 0.085) 0%,
+        rgba(255, 255, 255, 0.03) 100%
+      );
+      border-top: 1px solid rgba(255, 255, 255, 0.22);
+      border-left: 1px solid rgba(255, 255, 255, 0.12);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      border-radius: 20px;
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 15px 14px;
       cursor: pointer;
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      transition: all 0.3s;
+      backdrop-filter: blur(30px) saturate(180%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%);
+      box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.45),
+        inset 0 1px 0.5px rgba(255, 255, 255, 0.16);
+      transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), background 0.25s ease;
       -webkit-tap-highlight-color: transparent;
-      letter-spacing: -0.1px;
+      letter-spacing: -0.15px;
     }
 
-    .all-btn:active { transform: scale(0.96); }
+    .all-btn:active {
+      transform: scale(0.96);
+      background: rgba(255, 255, 255, 0.12);
+    }
 
+    /* ===== DYNAMIC ISLAND TARZI TOAST BİLDİRİM ===== */
     .toast {
       position: fixed;
-      bottom: 35px;
+      top: calc(14px + env(safe-area-inset-top));
       left: 50%;
-      transform: translateX(-50%) translateY(80px);
-      background: rgba(20, 20, 25, 0.95);
-      border: 1px solid var(--card-border);
-      backdrop-filter: blur(20px);
-      -webkit-backdrop-filter: blur(20px);
-      border-radius: 99px;
-      color: var(--text);
-      font-size: 12px;
-      padding: 11px 24px;
-      transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.1), opacity 0.3s;
+      transform: translateX(-50%) translateY(-90px) scale(0.92);
+      background: rgba(18, 18, 22, 0.78);
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      backdrop-filter: blur(32px) saturate(190%);
+      -webkit-backdrop-filter: blur(32px) saturate(190%);
+      border-radius: 999px;
+      color: var(--text-primary);
+      font-size: 13px;
+      font-weight: 500;
+      letter-spacing: -0.1px;
+      padding: 10px 20px;
+      transition: transform 0.45s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
       opacity: 0;
-      z-index: 99;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+      z-index: 120;
+      white-space: nowrap;
+      box-shadow:
+        0 14px 36px rgba(0, 0, 0, 0.65),
+        inset 0 1px 0.5px rgba(255, 255, 255, 0.22);
     }
 
-    .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+    .toast.show {
+      transform: translateX(-50%) translateY(0) scale(1);
+      opacity: 1;
+    }
     .toast.success { color: #ffffff; }
-    .toast.error { border-color: rgba(248,113,113,0.3); color: #f87171; }
+    .toast.error {
+      border-color: rgba(255, 69, 58, 0.4);
+      color: #ff6961;
+    }
 
-    /* ===== Zorla menüsü (bottom sheet) ===== */
+    /* ===== iOS LIQUID GLASS BOTTOM SHEET (ZORLA MENÜSÜ) ===== */
     .force-overlay {
-      position: fixed; inset: 0;
-      background: rgba(0,0,0,0.55);
-      backdrop-filter: blur(6px);
-      -webkit-backdrop-filter: blur(6px);
-      opacity: 0; pointer-events: none;
-      transition: opacity 0.25s;
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.52);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease;
       z-index: 100;
     }
-    .force-overlay.show { opacity: 1; pointer-events: auto; }
+    .force-overlay.show {
+      opacity: 1;
+      pointer-events: auto;
+    }
 
     .force-sheet {
       position: fixed;
-      left: 50%; bottom: 0;
-      width: 100%; max-width: 420px;
-      transform: translate(-50%, 100%);
-      background: rgba(24,24,30,0.98);
-      border: 1px solid var(--card-border);
-      border-radius: 26px 26px 0 0;
-      padding: 22px 20px calc(22px + env(safe-area-inset-bottom));
-      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      left: 50%;
+      bottom: 12px;
+      width: calc(100% - 24px);
+      max-width: 396px;
+      transform: translate(-50%, 115%);
+      background: linear-gradient(
+        170deg,
+        rgba(38, 38, 44, 0.78) 0%,
+        rgba(22, 22, 26, 0.88) 100%
+      );
+      backdrop-filter: blur(44px) saturate(200%);
+      -webkit-backdrop-filter: blur(44px) saturate(200%);
+      border-top: 1px solid rgba(255, 255, 255, 0.28);
+      border-left: 1px solid rgba(255, 255, 255, 0.14);
+      border-right: 1px solid rgba(255, 255, 255, 0.10);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 32px;
+      padding: 12px 18px calc(18px + env(safe-area-inset-bottom));
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.75),
+        inset 0 1px 1px rgba(255, 255, 255, 0.25);
+      transition: transform 0.42s cubic-bezier(0.22, 1, 0.36, 1);
       z-index: 101;
     }
-    .force-overlay.show .force-sheet { transform: translate(-50%, 0); }
+    .force-overlay.show .force-sheet {
+      transform: translate(-50%, 0);
+    }
 
-    .force-title { font-size: 15px; font-weight: 600; text-align: center; }
-    .force-sub { font-size: 11px; color: var(--text-muted); text-align: center; margin: 4px 0 16px; }
+    /* iOS Sheet Tutamaç Çubuğu */
+    .sheet-grabber {
+      width: 36px;
+      height: 4px;
+      border-radius: 99px;
+      background: rgba(255, 255, 255, 0.26);
+      margin: 0 auto 14px;
+    }
+
+    .force-title {
+      font-size: 17px;
+      font-weight: 600;
+      letter-spacing: -0.25px;
+      text-align: center;
+    }
+
+    .force-sub {
+      font-size: 12px;
+      color: var(--text-secondary);
+      text-align: center;
+      margin: 4px 0 18px;
+    }
 
     .force-btn {
       width: 100%;
-      border: 1px solid var(--card-border);
-      background: rgba(255,255,255,0.05);
-      color: var(--text);
-      font-size: 14px; font-weight: 500;
+      border-top: 1px solid rgba(255, 255, 255, 0.18);
+      border-left: 1px solid rgba(255, 255, 255, 0.08);
+      border-right: 1px solid rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+      background: rgba(255, 255, 255, 0.07);
+      color: var(--text-primary);
+      font-family: inherit;
+      font-size: 15px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
       padding: 15px;
-      border-radius: 16px;
+      border-radius: 18px;
       margin-bottom: 10px;
       cursor: pointer;
+      box-shadow: inset 0 1px 0.5px rgba(255, 255, 255, 0.12);
+      transition: transform 0.2s ease, background 0.2s ease;
       -webkit-tap-highlight-color: transparent;
     }
     .force-btn:active { transform: scale(0.97); }
-    .force-btn.on  { border-color: rgba(255,255,255,0.3); }
-    .force-btn.off { border-color: rgba(248,113,113,0.35); color: #f87171; }
-    .force-btn.cancel { background: transparent; color: var(--text-muted); margin-bottom: 0; }
+    .force-btn.on {
+      background: rgba(255, 214, 10, 0.16);
+      border-color: rgba(255, 214, 10, 0.36);
+      color: #ffe066;
+    }
+    .force-btn.off {
+      background: rgba(255, 69, 58, 0.14);
+      border-color: rgba(255, 69, 58, 0.32);
+      color: #ff6961;
+    }
+    .force-btn.cancel {
+      background: rgba(255, 255, 255, 0.04);
+      border-color: rgba(255, 255, 255, 0.08);
+      color: var(--text-secondary);
+      font-weight: 500;
+      margin-bottom: 0;
+    }
   </style>
-<link rel="apple-touch-icon" href="https://github.com/HamzaEymen61/foto/raw/main/icon-192.png"></head>
+</head>
 <body>
 <div class="app">
   <header>
-    <div class="live-time" id="liveTime">21:42</div>
-    <div class="greeting-text" id="greetingText">İyi Akşamlar</div>
-    <div class="live-date" id="liveDate">18 Kasım Çarşamba</div
+    <div class="live-time" id="liveTime">--:--</div>
+    <div class="greeting-text" id="greetingText"></div>
+    <div class="live-date" id="liveDate"></div>
+    <div class="version-pill">sürüm: uzun-basma-1sn</div>
   </header>
 
   <div class="main-content">
     <p class="section-label">Odalar</p>
-    <div class="grid" id="ledGrid"><div class="led-card" id="card-led1">
-        <span class="offline-badge">⚠️</span>
-        <div class="led-card-top">
-          <span class="led-icon">🛏️</span>
-          <div class="led-status-dot"></div>
-        </div>
-        <div class="led-card-bottom">
-          <div class="led-name">Hamza Oda</div>
-          <div class="led-status-text">Kapalı</div>
-        </div>
-      </div><div class="led-card on" id="card-led2">
-        <span class="offline-badge">⚠️</span>
-        <div class="led-card-top">
-          <span class="led-icon">🛋️</span>
-          <div class="led-status-dot"></div>
-        </div>
-        <div class="led-card-bottom">
-          <div class="led-name">Salon</div>
-          <div class="led-status-text">Açık</div>
-        </div>
-      </div><div class="led-card" id="card-led3">
-        <span class="offline-badge">⚠️</span>
-        <div class="led-card-top">
-          <span class="led-icon">🍽️</span>
-          <div class="led-status-dot"></div>
-        </div>
-        <div class="led-card-bottom">
-          <div class="led-name">Mutfak</div>
-          <div class="led-status-text">Kapalı</div>
-        </div>
-      </div><div class="led-card on" id="card-led4">
-        <span class="offline-badge">⚠️</span>
-        <div class="led-card-top">
-          <span class="led-icon">🌸</span>
-          <div class="led-status-dot"></div>
-        </div>
-        <div class="led-card-bottom">
-          <div class="led-name">Ravza Oda</div>
-          <div class="led-status-text">Açık</div>
-        </div>
-      </div><div class="led-card" id="card-led5">
-        <span class="offline-badge">⚠️</span>
-        <div class="led-card-top">
-          <span class="led-icon">🌙</span>
-          <div class="led-status-dot"></div>
-        </div>
-        <div class="led-card-bottom">
-          <div class="led-name">Yatak Odası</div>
-          <div class="led-status-text">Kapalı</div>
-        </div>
-      </div></div>
+    <div class="grid" id="ledGrid"></div>
   </div>
 
   <div>
@@ -403,13 +617,14 @@
   </div>
 </div>
 
-<div class="toast" id="toast">Yatak Odası kapatıldı</div>
+<div class="toast" id="toast"></div>
 
 <div class="force-overlay" id="forceOverlay">
   <div class="force-sheet">
-    <div class="force-title" id="forceTitle">🍽️ Mutfak</div>
+    <div class="sheet-grabber"></div>
+    <div class="force-title" id="forceTitle">Oda</div>
     <div class="force-sub">Mevcut durum yok sayılarak komut gönderilir</div>
-    <button class="force-btn on" onclick="forceSet('on')">⚡ Zorla Aç</button>
+    <button class="force-btn on"  onclick="forceSet('on')">⚡ Zorla Aç</button>
     <button class="force-btn off" onclick="forceSet('off')">⛔ Zorla Kapat</button>
     <button class="force-btn cancel" onclick="closeForceMenu()">İptal</button>
   </div>
@@ -528,7 +743,9 @@ const icon = document.createElement('link');
       card.innerHTML = `
         <span class="offline-badge">⚠️</span>
         <div class="led-card-top">
-          <span class="led-icon">${led.icon}</span>
+          <div class="led-icon-wrap">
+            <span class="led-icon">${led.icon}</span>
+          </div>
           <div class="led-status-dot"></div>
         </div>
         <div class="led-card-bottom">
@@ -748,6 +965,5 @@ const icon = document.createElement('link');
     }
   });
 </script>
-
-
-</body></html>
+</body>
+</html>
